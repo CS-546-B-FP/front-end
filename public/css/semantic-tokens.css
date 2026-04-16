@@ -1,0 +1,29 @@
+:root {
+  /* Semantic mapping layer */
+  --color-text: var(--token-color-ink-900);
+  --color-text-muted: var(--token-color-ink-700);
+  --color-text-soft: var(--token-color-ink-500);
+  --color-surface-page: linear-gradient(180deg, #fbf8f2 0%, #f0e6d6 100%);
+  --color-surface-panel: var(--token-color-surface-1);
+  --color-surface-subtle: var(--token-color-surface-2);
+  --color-border: var(--token-color-border);
+  --color-accent: var(--token-color-accent);
+  --color-accent-strong: var(--token-color-accent-strong);
+  --color-danger: var(--token-color-danger);
+  --color-warning: var(--token-color-warning);
+  --color-success: var(--token-color-success);
+  --color-focus: var(--token-color-focus);
+
+  --font-heading: var(--token-font-heading);
+  --font-body: var(--token-font-body);
+
+  --space-xs: var(--token-space-2);
+  --space-sm: var(--token-space-3);
+  --space-md: var(--token-space-4);
+  --space-lg: var(--token-space-5);
+  --space-xl: var(--token-space-6);
+
+  --radius-card: var(--token-radius-md);
+  --radius-pill: 999px;
+  --shadow-card: var(--token-shadow-card);
+}

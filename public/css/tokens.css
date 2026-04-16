@@ -1,0 +1,39 @@
+:root {
+  /* Core design tokens. TODO: Replace values when Figma drafts ready. */
+  --token-color-ink-900: #132033;
+  --token-color-ink-700: #2e425f;
+  --token-color-ink-500: #5e6f87;
+  --token-color-surface-0: #f7f4ed;
+  --token-color-surface-1: #fffdf8;
+  --token-color-surface-2: #efe7da;
+  --token-color-border: #d8cab2;
+  --token-color-accent: #0f766e;
+  --token-color-accent-strong: #0b5a54;
+  --token-color-danger: #a63b32;
+  --token-color-warning: #b76a12;
+  --token-color-success: #2f6c46;
+  --token-color-focus: #0f766e;
+  --token-color-risk-high: #b14d2d;
+  --token-color-risk-medium: #a67c1a;
+  --token-color-risk-low: #2f6c46;
+
+  --token-font-heading: "Georgia", "Times New Roman", serif;
+  --token-font-body: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  --token-space-1: 0.25rem;
+  --token-space-2: 0.5rem;
+  --token-space-3: 0.75rem;
+  --token-space-4: 1rem;
+  --token-space-5: 1.5rem;
+  --token-space-6: 2rem;
+  --token-space-7: 3rem;
+
+  --token-radius-sm: 0.5rem;
+  --token-radius-md: 0.9rem;
+  --token-radius-lg: 1.25rem;
+
+  --token-shadow-card: 0 16px 40px rgba(19, 32, 51, 0.08);
+  --token-shadow-focus: 0 0 0 3px rgba(15, 118, 110, 0.22);
+
+  --token-size-container: 1180px;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{locale}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{pageTitle}}</title>
+    <link rel="stylesheet" href="/public/css/tokens.css" />
+    <link rel="stylesheet" href="/public/css/semantic-tokens.css" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+  </head>
+  <body class="app-shell">
+    <a class="skip-link" href="#main-content">{{t "layout.skipToMain"}}</a>
+    <div class="sr-only" id="global-status" aria-live="polite"></div>
+    {{> site-header}}
+    <main id="main-content" tabindex="-1" class="page-shell">
+      {{{body}}}
+    </main>
+    {{> site-footer}}
+    {{#each scripts}}
+      <script src="{{this}}"></script>
+    {{/each}}
+  </body>
+</html>

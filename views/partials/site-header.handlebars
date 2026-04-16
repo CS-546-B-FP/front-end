@@ -1,0 +1,33 @@
+<header class="site-header">
+  <div class="shell-container site-header__inner">
+    <div class="site-branding">
+      <a class="site-branding__link" href="/">LeaseWise NYC</a>
+    </div>
+    <nav aria-label="Primary" class="site-nav">
+      <ul class="site-nav__list">
+        <li>
+          <a href="/" {{#if (isActivePath currentPath "/" "exact")}}aria-current="page"{{/if}}>{{t "nav.home"}}</a>
+        </li>
+        <li>
+          <a href="/buildings" {{#if (isActivePath currentPath "/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.buildings"}}</a>
+        </li>
+        <li>
+          <a href="/login" {{#if (isActivePath currentPath "/login" "prefix")}}aria-current="page"{{/if}}>{{t "nav.auth"}}</a>
+        </li>
+        <li>
+          <a href="/account" {{#if (isActivePath currentPath "/account" "prefix")}}aria-current="page"{{/if}}>{{t "nav.account"}}</a>
+        </li>
+        <li>
+          <a href="/admin/buildings" {{#if (isActivePath currentPath "/admin/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.admin"}}</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="site-header__meta">
+      <div class="locale-switcher" aria-label="{{t "nav.localeLabel"}}">
+        <a href="{{languageLinks.en}}" lang="en">EN</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{languageLinks.zhCn}}" lang="zh-CN">中文</a>
+      </div>
+    </div>
+  </div>
+</header>
