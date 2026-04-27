@@ -9,6 +9,10 @@ export const VALIDATION_LIMITS = Object.freeze({
   passwordMinLength: 8,
   passwordMaxLength: 128,
   nameMaxLength: 50,
+  ratingMin: 1,
+  ratingMax: 5,
+  noteMaxLength: 1000,
+  reviewTextMaxLength: 2000,
   textMaxLength: 5000
 });
 
@@ -26,7 +30,13 @@ export const VALIDATION_HINTS = Object.freeze({
     'Include at least one special character.',
     'Spaces are not allowed.'
   ]),
-  confirmPassword: Object.freeze(['Must match the password exactly.'])
+  confirmPassword: Object.freeze(['Must match the password exactly.']),
+  rating: Object.freeze([
+    `Choose a rating from ${VALIDATION_LIMITS.ratingMin} to ${VALIDATION_LIMITS.ratingMax}.`
+  ]),
+  note: Object.freeze([
+    `Use ${VALIDATION_LIMITS.noteMaxLength} characters or fewer.`
+  ])
 });
 
 export class ValidationError extends Error {
@@ -337,6 +347,82 @@ export function validatePasswordConfirmation(
   return normalizedConfirmation;
 }
 
+export function validateRating(
+  value,
+  {
+    field = 'rating',
+    label,
+    min = VALIDATION_LIMITS.ratingMin,
+    max = VALIDATION_LIMITS.ratingMax
+  } = {}
+) {
+  const resolvedLabel = getFieldLabel(field, label);
+  const normalized = normalizeTextInput(value);
+
+  if (normalized.length === 0) {
+    throw makeValidationError(`${resolvedLabel} is required.`, {
+      field,
+      label: resolvedLabel,
+      code: 'required',
+      value: normalized
+    });
+  }
+
+  const rating = Number(normalized);
+
+  if (!Number.isInteger(rating)) {
+    throw makeValidationError(`${resolvedLabel} must be a whole number.`, {
+      field,
+      label: resolvedLabel,
+      code: 'invalid_number',
+      value: normalized
+    });
+  }
+
+  if (rating < min || rating > max) {
+    throw makeValidationError(`${resolvedLabel} must be between ${min} and ${max}.`, {
+      field,
+      label: resolvedLabel,
+      code: 'out_of_range',
+      value: normalized
+    });
+  }
+
+  return rating;
+}
+
+export function validateNoteLength(
+  value,
+  {
+    field = 'note',
+    label,
+    maxLength = VALIDATION_LIMITS.noteMaxLength,
+    emptyValue = ''
+  } = {}
+) {
+  return validateOptionalString(value, {
+    field,
+    label,
+    maxLength,
+    emptyValue
+  });
+}
+
+export function validateReviewText(
+  value,
+  {
+    field = 'reviewText',
+    label = 'Review',
+    maxLength = VALIDATION_LIMITS.reviewTextMaxLength
+  } = {}
+) {
+  return validateRequiredString(value, {
+    field,
+    label,
+    maxLength
+  });
+}
+
 export function composeValidators(...validators) {
   return (value, context) => validators.reduce((currentValue, validator) => validator(currentValue, context), value);
 }
@@ -591,4 +677,13 @@ export const profileValidationSchema = Object.freeze({
   lastName: (value) => validateName(value, { field: 'lastName', label: 'Last name' }),
   email: (value) => validateEmail(value, { field: 'email', label: 'Email' }),
   username: (value) => validateUsername(value, { field: 'username', label: 'Username' })
+});
+
+export const reviewValidationSchema = Object.freeze({
+  reviewText: (value) => validateReviewText(value, { field: 'reviewText', label: 'Review' }),
+  rating: (value) => validateRating(value, { field: 'rating', label: 'Rating' })
+});
+
+export const shortlistNoteValidationSchema = Object.freeze({
+  privateNote: (value) => validateNoteLength(value, { field: 'privateNote', label: 'Private note' })
 });
