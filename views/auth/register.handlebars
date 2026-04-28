@@ -1,1 +1,57 @@
 {{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<section class="auth-page">
+  <div class="auth-card">
+    <header class="auth-header">
+      <p class="eyebrow">Create account</p>
+      <h1>Join LeaseWise NYC</h1>
+      <p class="auth-description">
+        Save buildings, compare apartments, write reviews, and track housing records.
+      </p>
+    </header>
+
+    {{> error-summary errors=errors}}
+
+    <form class="auth-form" id="register-form" action="/register" method="POST" novalidate>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="firstName">First name</label>
+          <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Enter first name" required value="{{formData.firstName}}">
+        </div>
+
+        <div class="form-field">
+          <label for="lastName">Last name</label>
+          <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Enter last name" required value="{{formData.lastName}}">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="Enter email address" required value="{{formData.email}}">
+      </div>
+
+      <div class="form-field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" placeholder="Choose a username" required value="{{formData.username}}">
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" required>
+      </div>
+
+      <div class="form-field">
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirm your password" required>
+      </div>
+
+      <button class="button button-primary auth-submit" type="submit">
+        Create account
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a href="/login">Sign in</a>
+    </p>
+  </div>
+</section>
