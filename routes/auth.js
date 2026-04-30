@@ -12,6 +12,10 @@ router.get("/login", (req, res) => {
   });
 });
 
+router.post("/login", (req, res) => {
+  res.status(501).json({ error: "Not implemented" });
+});
+
 router.get("/register", (req, res) => {
   return renderFeaturePage(res, {
     title: "Register",
