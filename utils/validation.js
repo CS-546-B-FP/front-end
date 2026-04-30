@@ -368,9 +368,7 @@ export function validateRating(
     });
   }
 
-  const rating = Number(normalized);
-
-  if (!Number.isInteger(rating)) {
+  if (!/^-?\d+$/.test(normalized)) {
     throw makeValidationError(`${resolvedLabel} must be a whole number.`, {
       field,
       label: resolvedLabel,
@@ -378,6 +376,8 @@ export function validateRating(
       value: normalized
     });
   }
+
+  const rating = Number(normalized);
 
   if (rating < min || rating > max) {
     throw makeValidationError(`${resolvedLabel} must be between ${min} and ${max}.`, {
