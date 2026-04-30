@@ -10,7 +10,7 @@ export function getPagePlaceholder({ title, routeGroup, description, pagePath, t
       pagePath,
       todoItems
     }),
-    scripts: ['/public/js/app.js']
+    scripts: ['/public/js/ajax-form.js', '/public/js/app.js']
   };
 }
 

@@ -172,6 +172,12 @@ code {
   gap: var(--space-md);
 }
 
+.form-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .form-field {
   display: grid;
   gap: var(--space-xs);
@@ -183,7 +189,7 @@ code {
 
 .form-field input {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-input);
+  border-radius: var(--radius-card);
   font: inherit;
   padding: 0.75rem 0.9rem;
 }
