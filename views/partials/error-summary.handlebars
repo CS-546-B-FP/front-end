@@ -1,1 +1,9 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+{{#if errors.length}}
+<div class="error-summary" role="alert">
+  <ul>
+    {{#each errors}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
+</div>
+{{/if}}
