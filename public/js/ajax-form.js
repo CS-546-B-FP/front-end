@@ -257,9 +257,9 @@
         success: false,
         status: 0,
         data: null,
-        error: error.message || DEFAULT_ERROR_MESSAGE,
+        error: DEFAULT_ERROR_MESSAGE,
         fieldErrors: null,
-        message: error.message || DEFAULT_ERROR_MESSAGE,
+        message: DEFAULT_ERROR_MESSAGE,
         response: null,
         payload: null
       };
@@ -292,6 +292,8 @@
     return Array.from(document.querySelectorAll(selector)).map((form) => attachAjaxForm(form, options));
   }
 
+  let _autoCleanups = [];
+
   window.LeaseWiseAjaxForms = Object.freeze({
     attachAjaxForm,
     attachAjaxForms,
@@ -301,12 +303,15 @@
     renderFieldErrors,
     serializeForm,
     setFormLoading,
-    submitAjaxForm
+    submitAjaxForm,
+    detachAll: () => { _autoCleanups.forEach((fn) => fn()); _autoCleanups = []; }
   });
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => attachAjaxForms(), { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      _autoCleanups = attachAjaxForms();
+    }, { once: true });
   } else {
-    attachAjaxForms();
+    _autoCleanups = attachAjaxForms();
   }
 })();
