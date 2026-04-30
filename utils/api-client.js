@@ -160,11 +160,14 @@ export function throwIfApiError(result) {
   });
 }
 
+const DEFAULT_TIMEOUT_MS = 30000;
+
 export function createApiClient({
   baseUrl = DEFAULT_API_BASE_URL,
   fetchImpl = globalThis.fetch,
   defaultHeaders = {},
-  credentials = 'same-origin'
+  credentials = 'same-origin',
+  timeoutMs = DEFAULT_TIMEOUT_MS
 } = {}) {
   const request = async (endpoint, {
     method = 'GET',
@@ -176,23 +179,19 @@ export function createApiClient({
   } = {}) => {
     const normalizedMethod = normalizeMethod(method);
     const url = buildApiUrl(endpoint, baseUrl);
-    const requestHeaders = normalizeHeaders({
+    const resolvedHeaders = normalizeHeaders({
       ...defaultHeaders,
-      ...headers
+      ...headers,
+      ...(json !== undefined ? { 'Content-Type': 'application/json' } : {})
     });
     const requestOptions = {
       method: normalizedMethod,
       credentials,
-      headers: requestHeaders,
-      ...fetchOptions
+      headers: resolvedHeaders,
+      ...fetchOptions,
+      ...(json !== undefined ? { body: JSON.stringify(json) } : {}),
+      ...(body !== undefined && json === undefined ? { body } : {})
     };
-
-    if (json !== undefined) {
-      requestHeaders['Content-Type'] = requestHeaders['Content-Type'] || 'application/json';
-      requestOptions.body = JSON.stringify(json);
-    } else if (body !== undefined) {
-      requestOptions.body = body;
-    }
 
     if (typeof fetchImpl !== 'function') {
       const result = normalizeNetworkError(new TypeError('fetch is not available'), {
@@ -202,14 +201,20 @@ export function createApiClient({
       return throwOnError ? throwIfApiError(result) : result;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    requestOptions.signal = requestOptions.signal ?? controller.signal;
+
     try {
       const response = await fetchImpl(url, requestOptions);
+      clearTimeout(timeoutId);
       const result = await normalizeApiResponse(response, {
         method: normalizedMethod,
         url
       });
       return throwOnError ? throwIfApiError(result) : result;
     } catch (error) {
+      clearTimeout(timeoutId);
       const result = normalizeNetworkError(error, {
         method: normalizedMethod,
         url
