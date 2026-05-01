@@ -133,6 +133,35 @@ code {
   padding: var(--space-xl) var(--space-md);
 }
 
+.error-summary {
+  background: var(--color-surface-panel);
+  border: 2px solid var(--color-danger, #b42318);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+}
+
+.error-summary h2 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin: 0 0 var(--space-sm);
+}
+
+.error-summary__list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.error-summary__list li + li {
+  margin-top: var(--space-xs);
+}
+
+.error-summary a {
+  color: var(--color-danger, #b42318);
+  font-weight: 700;
+}
+
 .auth-page {
   display: flex;
   justify-content: center;
