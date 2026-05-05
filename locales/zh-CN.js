@@ -10,6 +10,12 @@ export default {
     admin: "管理后台",
     localeLabel: "语言"
   },
+  pagination: {
+    nav: "分页导航",
+    prev: "上一页",
+    next: "下一页",
+    page: "第"
+  },
   placeholder: {
     routeLabel: "页面路径",
     groupLabel: "页面分组",

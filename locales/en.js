@@ -10,6 +10,12 @@ export default {
     admin: 'Admin',
     localeLabel: 'Language'
   },
+  pagination: {
+    nav: 'Pagination',
+    prev: 'Previous',
+    next: 'Next',
+    page: 'Page'
+  },
   placeholder: {
     routeLabel: 'Page path',
     groupLabel: 'Section',

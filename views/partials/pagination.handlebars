@@ -1,18 +1,20 @@
-<!-- Expected input: pagination = {
-  page: 2,
-  totalPages: 5,
-  hasPrev: true,
-  hasNext: true,
-  prevPage: 1,
-  nextPage: 3
-} -->
+{{!--
+  Expected input: pagination = {
+    page: 2,
+    totalPages: 5,
+    hasPrev: true,
+    hasNext: true,
+    prevPage: 1,
+    nextPage: 3
+  }
+--}}
 
-<nav class="pagination" aria-label="Pagination">
+<nav class="pagination" aria-label="{{t "pagination.nav"}}">
 
   {{#if pagination}}
     <ul class="pagination__list">
 
-      <!-- PREVIOUS -->
+      {{! PREVIOUS }}
       <li class="pagination__item">
         {{#if pagination.hasPrev}}
           <a
@@ -23,16 +25,13 @@
             {{t "pagination.prev"}}
           </a>
         {{else}}
-          <span
-            class="pagination__link is-disabled"
-            aria-disabled="true"
-          >
+          <span class="pagination__link is-disabled">
             {{t "pagination.prev"}}
           </span>
         {{/if}}
       </li>
 
-      <!-- CURRENT PAGE -->
+      {{! CURRENT PAGE }}
       <li class="pagination__item">
         <span
           class="pagination__current"
@@ -47,7 +46,7 @@
         </span>
       </li>
 
-      <!-- NEXT -->
+      {{! NEXT }}
       <li class="pagination__item">
         {{#if pagination.hasNext}}
           <a
@@ -58,10 +57,7 @@
             {{t "pagination.next"}}
           </a>
         {{else}}
-          <span
-            class="pagination__link is-disabled"
-            aria-disabled="true"
-          >
+          <span class="pagination__link is-disabled">
             {{t "pagination.next"}}
           </span>
         {{/if}}
