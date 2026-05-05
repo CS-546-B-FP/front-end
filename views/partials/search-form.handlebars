@@ -1,4 +1,3 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
 <form
   class="search-form"
   method="GET"
@@ -9,20 +8,19 @@
   <input type="hidden" name="lang" value="{{locale}}" />
 
   <div class="search-form__row">
-    <!-- Keyword search -->
+    {{! Keyword search }}
     <div class="search-form__field">
-      <label for="search">{{t "search.keywordLabel"}}</label>
+      <label for="building-search">{{t "search.keywordLabel"}}</label>
       <input
-        id="search"
+        id="building-search"
         type="search"
         name="search"
         value="{{currentQuery.search}}"
         placeholder="{{t "search.keywordPlaceholder"}}"
-        autocomplete="off"
       />
     </div>
 
-    <!-- Borough filter -->
+    {{! Borough filter }}
     <div class="search-form__field">
       <label for="borough">{{t "search.boroughLabel"}}</label>
       <select id="borough" name="borough">
@@ -46,9 +44,9 @@
       </select>
     </div>
 
-    <!-- Submit -->
+    {{! Submit }}
     <div class="search-form__actions">
-      <button type="submit">
+      <button class="button button-primary" type="submit">
         {{t "search.submit"}}
       </button>
     </div>
