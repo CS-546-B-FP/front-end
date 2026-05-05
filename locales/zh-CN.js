@@ -10,6 +10,14 @@ export default {
     admin: "管理后台",
     localeLabel: "语言"
   },
+
+  search: {
+    keywordLabel: "搜索",
+    keywordPlaceholder: "按地址、名称或房东搜索",
+    boroughLabel: "行政区",
+    allBoroughs: "全部行政区",
+    submit: "搜索"
+  },
   pagination: {
     nav: "分页导航",
     prev: "上一页",
