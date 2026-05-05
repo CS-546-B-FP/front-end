@@ -10,6 +10,18 @@ export default {
     admin: 'Admin',
     localeLabel: 'Language'
   },
+
+  search: {
+    keywordLabel: 'Search',
+    keywordPlaceholder: 'Search by address, name, or owner',
+    boroughLabel: 'Borough',
+    allBoroughs: 'All boroughs',
+    submit: 'Search'
+  },
+  pagination: {
+    prev: 'Previous',
+    next: 'Next'
+  },
   placeholder: {
     routeLabel: 'Page path',
     groupLabel: 'Section',
