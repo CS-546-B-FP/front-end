@@ -19,8 +19,10 @@ export default {
     submit: "搜索"
   },
   pagination: {
+    nav: "分页导航",
     prev: "上一页",
-    next: "下一页"
+    next: "下一页",
+    page: "第"
   },
   placeholder: {
     routeLabel: "页面路径",

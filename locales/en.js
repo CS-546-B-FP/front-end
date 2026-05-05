@@ -19,8 +19,10 @@ export default {
     submit: 'Search'
   },
   pagination: {
+    nav: 'Pagination',
     prev: 'Previous',
-    next: 'Next'
+    next: 'Next',
+    page: 'Page'
   },
   placeholder: {
     routeLabel: 'Page path',
