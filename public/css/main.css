@@ -162,6 +162,39 @@ code {
   font-weight: 700;
 }
 
+.search-form {
+  margin-bottom: var(--space-lg);
+}
+
+.search-form__row {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.search-form__field {
+  display: grid;
+  flex: 1 1 12rem;
+  gap: var(--space-xs);
+}
+
+.search-form__field label {
+  font-weight: 700;
+}
+
+.search-form__field input,
+.search-form__field select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+}
+
+.search-form__actions {
+  flex: 0 0 auto;
+}
+
 .auth-page {
   display: flex;
   justify-content: center;

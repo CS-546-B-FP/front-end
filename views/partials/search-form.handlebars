@@ -1,1 +1,54 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+<form
+  class="search-form"
+  method="GET"
+  action="/buildings"
+  role="search"
+  aria-label="Building search form"
+>
+  <input type="hidden" name="lang" value="{{locale}}" />
+
+  <div class="search-form__row">
+    {{! Keyword search }}
+    <div class="search-form__field">
+      <label for="building-search">{{t "search.keywordLabel"}}</label>
+      <input
+        id="building-search"
+        type="search"
+        name="search"
+        value="{{currentQuery.search}}"
+        placeholder="{{t "search.keywordPlaceholder"}}"
+      />
+    </div>
+
+    {{! Borough filter }}
+    <div class="search-form__field">
+      <label for="borough">{{t "search.boroughLabel"}}</label>
+      <select id="borough" name="borough">
+        <option value="">{{t "search.allBoroughs"}}</option>
+
+        <option value="Manhattan" {{#if (eq currentQuery.borough "Manhattan")}}selected{{/if}}>
+          Manhattan
+        </option>
+        <option value="Brooklyn" {{#if (eq currentQuery.borough "Brooklyn")}}selected{{/if}}>
+          Brooklyn
+        </option>
+        <option value="Queens" {{#if (eq currentQuery.borough "Queens")}}selected{{/if}}>
+          Queens
+        </option>
+        <option value="Bronx" {{#if (eq currentQuery.borough "Bronx")}}selected{{/if}}>
+          Bronx
+        </option>
+        <option value="Staten Island" {{#if (eq currentQuery.borough "Staten Island")}}selected{{/if}}>
+          Staten Island
+        </option>
+      </select>
+    </div>
+
+    {{! Submit }}
+    <div class="search-form__actions">
+      <button class="button button-primary" type="submit">
+        {{t "search.submit"}}
+      </button>
+    </div>
+  </div>
+</form>
