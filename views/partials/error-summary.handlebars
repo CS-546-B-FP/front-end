@@ -10,10 +10,14 @@
     <ul class="error-summary__list">
       {{#each errors}}
         <li>
-          {{#if this.href}}
-            <a href="{{this.href}}">{{this.message}}</a>
+          {{#if this.message}}
+            {{#if this.href}}
+              <a href="{{this.href}}">{{this.message}}</a>
+            {{else}}
+              {{this.message}}
+            {{/if}}
           {{else}}
-            {{this.message}}
+            {{this}}
           {{/if}}
         </li>
       {{/each}}
