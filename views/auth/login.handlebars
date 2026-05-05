@@ -1,4 +1,3 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
 <section class="auth-page">
   <div class="auth-card">
     <header class="auth-header">
@@ -11,7 +10,7 @@
 
     {{> error-summary errors=errors}}
 
-    <form class="auth-form" id="login-form" action="/auth/login" method="POST" novalidate>
+    <form class="auth-form" id="login-form" action="/login" method="POST" novalidate>
       <div class="form-field">
         <label for="username">Username</label>
         <input
@@ -44,7 +43,7 @@
 
     <p class="auth-switch">
       New to LeaseWise NYC?
-      <a href="/auth/register">Create an account</a>
+      <a href="/register">Create an account</a>
     </p>
   </div>
 </section>

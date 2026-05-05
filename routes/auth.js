@@ -1,7 +1,5 @@
 import { Router } from "express";
 
-import { renderFeaturePage } from "./route-utils.js";
-
 const router = Router();
 
 router.get("/login", (req, res) => {
@@ -17,16 +15,10 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/register", (req, res) => {
-  return renderFeaturePage(res, {
+  return res.render("auth/register", {
     title: "Register",
-    routeGroup: "Authentication",
-    pagePath: req.path,
-    description: "This page is a placeholder for account registration.",
-    todoItems: [
-      "New users will be able to create an account here.",
-      "Required profile fields and password rules will be presented here.",
-      "Submission feedback and account verification steps will appear here.",
-    ],
+    formData: {},
+    errors: [],
   });
 });
 
