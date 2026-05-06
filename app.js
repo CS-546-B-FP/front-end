@@ -16,7 +16,8 @@ const port = Number(process.env.PORT) || 3000;
 const hbs = create({
   defaultLayout: 'main',
   extname: '.handlebars',
-  helpers: registerHandlebarsHelpers()
+  helpers: registerHandlebarsHelpers(),
+  runtimeOptions: { data: true }
 });
 
 app.engine('handlebars', hbs.engine);
