@@ -39,7 +39,9 @@ export function attachViewContext(req, res, next) {
     en: buildLanguageLink(req.path, req.query, 'en'),
     zhCn: buildLanguageLink(req.path, req.query, 'zh-CN')
   };
-  res.locals.appMode = 'placeholder-shell';
+  res.locals.currentUser = req.session?.user || null;
+  res.locals.isAdmin = req.session?.user?.role === 'admin';
+  res.locals.appMode = 'live';
 
   next();
 }
