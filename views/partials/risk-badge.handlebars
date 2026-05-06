@@ -1,1 +1,3 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+<span class="risk-badge risk-badge--{{level}}" aria-label="Risk level: {{level}}{{#if score}}, score {{score}}{{/if}}">
+  {{#if (eq level "high")}}High Risk{{else if (eq level "medium")}}Medium Risk{{else}}Low Risk{{/if}}{{#if score}} &middot; {{score}}{{/if}}
+</span>

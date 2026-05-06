@@ -1,1 +1,23 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+<article class="review-card">
+  <div class="review-card__header">
+    <div>
+      <span class="review-card__stars" aria-label="{{review.rating}} out of 5 stars">
+        {{#times review.rating}}&#9733;{{/times}}{{#timesFrom review.rating 5}}&#9734;{{/timesFrom}}
+      </span>
+      <p class="review-card__meta">{{review.author}} &middot; {{formatDate review.createdAt}}</p>
+    </div>
+    {{#if canDelete}}
+      <button class="button button-ghost" type="button"
+        data-dialog-trigger="delete-review-{{review._id}}"
+        aria-label="{{t "reviews.delete"}}">{{t "reviews.delete"}}</button>
+    {{/if}}
+  </div>
+  {{#if review.text}}<p>{{review.text}}</p>{{/if}}
+  {{#if review.issueTags.length}}
+    <ul class="review-card__tags" aria-label="Issue tags">
+      {{#each review.issueTags}}
+        <li class="tag">{{this}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</article>

@@ -1,1 +1,11 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+<form class="note-form" method="POST" action="/shortlists/{{shortlistId}}/items/{{itemId}}/note">
+  <label for="note-{{itemId}}" class="form-field label">{{t "noteForm.label"}}</label>
+  <textarea
+    id="note-{{itemId}}"
+    name="note"
+    aria-describedby="note-hint-{{itemId}}"
+    placeholder="{{t "noteForm.placeholder"}}"
+  >{{note}}</textarea>
+  <p class="form-hint" id="note-hint-{{itemId}}">{{t "noteForm.hint"}}</p>
+  <button class="button button-primary" type="submit">{{t "noteForm.save"}}</button>
+</form>

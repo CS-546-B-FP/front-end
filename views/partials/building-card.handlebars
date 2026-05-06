@@ -1,1 +1,24 @@
-{{! Reserved partial placeholder. Replace this file when the team defines the final component contract. }}
+<article class="building-card">
+  <a class="building-card__address" href="/buildings/{{building._id}}">{{building.address}}</a>
+  <div class="building-card__meta">
+    <span>{{building.borough}}</span>
+    {{#if building.riskSummary}}
+      {{> risk-badge level=building.riskSummary.level score=building.riskSummary.score}}
+    {{/if}}
+  </div>
+  <div class="building-card__footer">
+    <span class="building-card__reviews">
+      {{#if building.reviewCount}}{{building.reviewCount}} {{t "reviews.delete"}}{{else}}{{t "buildings.noReviewsYet"}}{{/if}}
+    </span>
+    {{#if currentUser}}
+      <form method="POST" action="/watchlist/{{building._id}}">
+        <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
+        <button class="watchlist-btn" type="submit"
+          aria-pressed="{{#if isWatched}}true{{else}}false{{/if}}"
+          aria-label="{{#if isWatched}}{{t "buildings.removeWatchlist"}}{{else}}{{t "buildings.addWatchlist"}}{{/if}}">
+          {{#if isWatched}}{{t "buildings.watching"}}{{else}}{{t "buildings.watch"}}{{/if}}
+        </button>
+      </form>
+    {{/if}}
+  </div>
+</article>
