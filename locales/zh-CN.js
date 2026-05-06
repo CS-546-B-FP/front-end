@@ -5,9 +5,12 @@ export default {
   nav: {
     home: '首页',
     buildings: '房屋',
-    auth: '认证入口',
-    account: '用户区',
+    auth: '登录',
+    account: '账户',
     admin: '管理后台',
+    watchlist: '关注列表',
+    shortlists: '对比清单',
+    logout: '退出',
     localeLabel: '语言'
   },
   search: {
