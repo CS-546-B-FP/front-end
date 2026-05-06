@@ -1,0 +1,56 @@
+{{! Expected input: {
+  buildings,
+  pagination: { page, limit, totalPages, total },
+}
+
+    totalPages not defined at back-end getAllBuildings() yet
+}}
+
+<section class="page-section">
+
+  <header class="page-header">
+    <h1>{{t "buildings.title"}}</h1>
+
+    {{! SEARCH FORM }}
+    {{> search-form}}
+  </header>
+
+  {{! RESULTS }}
+  <section class="search-results" aria-label="Search results">
+
+    {{#if buildings.length}}
+
+      <ul class="building-list">
+        {{#each buildings}}
+          <li class="building-card">
+            <a href="/buildings/{{this._id}}">
+              <h2>{{this.name}}</h2>
+
+              <p class="muted">
+                {{this.address}} · {{this.borough}}
+              </p>
+
+              {{#if this.rating}}
+                <p>Rating: {{this.rating}}</p>
+              {{/if}}
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+
+    {{else}}
+
+      <p class="empty-state">
+        {{t "buildings.noResults"}}
+      </p>
+
+    {{/if}}
+
+  </section>
+
+  {{! PAGINATION }}
+  {{#if pagination}}
+    {{> pagination pagination}}
+  {{/if}}
+
+</section>
