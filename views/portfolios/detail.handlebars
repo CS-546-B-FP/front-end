@@ -1,1 +1,20 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+    <div>
+      <p class="page-eyebrow">{{t "portfolio.eyebrow"}}</p>
+      <h1>{{portfolio.name}}</h1>
+      <p class="page-intro">{{portfolio.buildingCount}} {{t "portfolio.underOwner"}}</p>
+    </div>
+  </div>
+</div>
+
+{{#if buildings.length}}
+  <div class="building-grid">
+    {{#each buildings}}
+      {{> building-card building=this isWatched=(isWatched this._id ../watchlistIds)}}
+    {{/each}}
+  </div>
+  {{> pagination}}
+{{else}}
+  {{> empty-state title=(t "portfolio.emptyTitle") message=(t "portfolio.emptyMessage")}}
+{{/if}}

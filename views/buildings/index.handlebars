@@ -1,1 +1,16 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <h1>{{t "buildings.noResultsTitle"}}</h1>
+</div>
+
+{{> search-form}}
+
+{{#if buildings.length}}
+  <div class="building-grid" aria-label="Building results">
+    {{#each buildings}}
+      {{> building-card building=this isWatched=(isWatched this._id ../watchlistIds)}}
+    {{/each}}
+  </div>
+  {{> pagination}}
+{{else}}
+  {{> empty-state title=(t "buildings.noResultsTitle") message=(t "buildings.noResultsMessage") actionHref="/buildings" actionLabel=(t "buildings.clearSearch")}}
+{{/if}}

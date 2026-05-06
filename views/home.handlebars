@@ -1,1 +1,30 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<section class="hero">
+  <p class="hero__eyebrow">{{t "home.eyebrow"}}</p>
+  <h1 class="hero__title">{{t "home.title"}}</h1>
+  <p class="hero__subtitle">{{t "home.subtitle"}}</p>
+  <div class="hero__search">
+    {{> search-form}}
+  </div>
+</section>
+
+<section aria-labelledby="features-heading" class="shell-container">
+  <h2 id="features-heading" class="sr-only">{{t "home.title"}}</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h3 class="feature-card__title">{{t "home.featureIntelTitle"}}</h3>
+      <p class="feature-card__desc">{{t "home.featureIntelDesc"}}</p>
+    </div>
+    <div class="feature-card">
+      <h3 class="feature-card__title">{{t "home.featureShortlistTitle"}}</h3>
+      <p class="feature-card__desc">{{t "home.featureShortlistDesc"}}</p>
+    </div>
+    <div class="feature-card">
+      <h3 class="feature-card__title">{{t "home.featureReviewsTitle"}}</h3>
+      <p class="feature-card__desc">{{t "home.featureReviewsDesc"}}</p>
+    </div>
+    <div class="feature-card">
+      <h3 class="feature-card__title">{{t "home.featureWatchlistTitle"}}</h3>
+      <p class="feature-card__desc">{{t "home.featureWatchlistDesc"}}</p>
+    </div>
+  </div>
+</section>

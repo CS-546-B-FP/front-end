@@ -1,1 +1,119 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+    <div>
+      <p class="page-eyebrow">{{building.borough}}</p>
+      <h1>{{building.address}}</h1>
+      {{#if building.riskSummary}}
+        {{> risk-badge level=building.riskSummary.level score=building.riskSummary.score}}
+      {{/if}}
+    </div>
+    {{#if currentUser}}
+      <form method="POST" action="/watchlist/{{building._id}}">
+        <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
+        <button class="button {{#if isWatched}}button-ghost{{else}}button-primary{{/if}}" type="submit">
+          {{#if isWatched}}{{t "buildings.removeWatchlist"}}{{else}}{{t "buildings.addWatchlist"}}{{/if}}
+        </button>
+      </form>
+    {{/if}}
+  </div>
+</div>
+
+{{#if building.riskSummary.highlights.length}}
+  <div class="content-panel" style="margin-bottom:var(--space-lg)">
+    <h2 class="section-title">{{t "buildings.riskHighlights"}}</h2>
+    <ul>
+      {{#each building.riskSummary.highlights}}
+        <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+{{#if building.riskSummary}}
+  {{> stats-strip stats=building.riskSummary}}
+{{/if}}
+
+<div class="detail-layout" style="margin-top:var(--space-xl)">
+  <div>
+    {{#if building.housingRecords.length}}
+      <section class="content-panel" aria-labelledby="records-heading">
+        <h2 class="section-title" id="records-heading">{{t "buildings.housingRecords"}}</h2>
+        <div class="records-list">
+          {{#each building.housingRecords}}
+            <div class="record-item record-item--{{this.type}}">
+              <p class="record-item__type">{{this.type}}</p>
+              <p class="record-item__desc">{{this.description}}</p>
+            </div>
+          {{/each}}
+        </div>
+      </section>
+    {{/if}}
+
+    <section class="content-panel" aria-labelledby="reviews-heading" style="margin-top:var(--space-lg)">
+      <h2 class="section-title" id="reviews-heading">{{t "buildings.communityReviews"}}</h2>
+      {{#if reviews.length}}
+        <div class="review-list">
+          {{#each reviews}}
+            {{> review-card review=this canDelete=(canDeleteReview this ../currentUser)}}
+          {{/each}}
+        </div>
+      {{else}}
+        {{> empty-state title=(t "buildings.noReviewsTitle") message=(t "buildings.noReviewsMessage")}}
+      {{/if}}
+
+      {{#if currentUser}}
+        <details style="margin-top:var(--space-lg)">
+          <summary class="button button-primary" style="display:inline-block;cursor:pointer">{{t "buildings.writeReview"}}</summary>
+          <form method="POST" action="/buildings/{{building._id}}/reviews" style="margin-top:var(--space-md);display:grid;gap:var(--space-md)">
+            <div class="form-field">
+              <label for="rating">{{t "buildings.ratingLabel"}}</label>
+              <select id="rating" name="rating" required>
+                <option value="">{{t "buildings.ratingPlaceholder"}}</option>
+                <option value="5">{{t "buildings.rating5"}}</option>
+                <option value="4">{{t "buildings.rating4"}}</option>
+                <option value="3">{{t "buildings.rating3"}}</option>
+                <option value="2">{{t "buildings.rating2"}}</option>
+                <option value="1">{{t "buildings.rating1"}}</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="review-text">{{t "buildings.reviewLabel"}}</label>
+              <textarea id="review-text" name="text" rows="4" style="border:1px solid var(--color-border);border-radius:var(--token-radius-sm);font:inherit;padding:.75rem;resize:vertical;width:100%;box-sizing:border-box" placeholder="{{t "buildings.reviewPlaceholder"}}"></textarea>
+            </div>
+            <button class="button button-primary" type="submit">{{t "buildings.submitReview"}}</button>
+          </form>
+        </details>
+      {{/if}}
+    </section>
+  </div>
+
+  <aside class="detail-sidebar">
+    {{#if building.owner}}
+      <div class="content-panel">
+        <h2 class="section-title">{{t "buildings.ownerManager"}}</h2>
+        <p><a href="/portfolios/{{building.owner._id}}">{{building.owner.name}}</a></p>
+        {{#if building.owner.buildingCount}}
+          <p class="form-hint">{{building.owner.buildingCount}} {{t "buildings.buildingsInPortfolio"}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if currentUser}}
+      <div class="content-panel">
+        <h2 class="section-title">{{t "buildings.addToShortlist"}}</h2>
+        <form method="POST" action="/shortlists/add" style="display:grid;gap:var(--space-sm)">
+          <input type="hidden" name="buildingId" value="{{building._id}}" />
+          <div class="form-field">
+            <label for="shortlist-select">{{t "buildings.chooseShortlist"}}</label>
+            <select id="shortlist-select" name="shortlistId">
+              {{#each userShortlists}}
+                <option value="{{this._id}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <button class="button button-primary" type="submit">{{t "buildings.addToShortlist"}}</button>
+        </form>
+      </div>
+    {{/if}}
+  </aside>
+</div>
