@@ -1,24 +1,39 @@
-import { Router } from 'express';
-import * as api from '../services/api.js';
+import { Router } from "express";
+import * as api from "../services/api.js";
+import {
+  getUserFriendlyApiError,
+  getUnexpectedErrorMessage,
+} from "../utils/errors.js";
 
 const router = Router();
 
-const SCRIPTS = ['/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/app.js'];
+const SCRIPTS = [
+  "/public/js/dialog.js",
+  "/public/js/watchlist.js",
+  "/public/js/app.js",
+];
 
-router.get('/', (req, res) => {
-  res.render('home', { pageTitle: 'LeaseWise NYC — Know before you lease', scripts: SCRIPTS });
+router.get("/", (req, res) => {
+  res.render("home", {
+    pageTitle: "LeaseWise NYC — Know before you lease",
+    scripts: SCRIPTS,
+  });
 });
 
-router.get('/buildings', async (req, res) => {
+router.get("/buildings", async (req, res) => {
   try {
     const { search, borough, page } = req.query;
     const result = await api.buildings.list({ search, borough, page });
 
     if (!result.ok) {
-      return res.render('buildings/index', {
-        pageTitle: 'Browse Buildings — LeaseWise NYC',
+      return res.render("buildings/index", {
+        pageTitle: "Browse Buildings — LeaseWise NYC",
         buildings: [],
-        scripts: SCRIPTS
+        error: getUserFriendlyApiError(
+          result,
+          "Failed to load buildings. Please try again later.",
+        ),
+        scripts: SCRIPTS,
       });
     }
 
@@ -30,7 +45,7 @@ router.get('/buildings', async (req, res) => {
       hasPrev: currentPage > 1,
       hasNext: currentPage < totalPages,
       prevPage: currentPage - 1,
-      nextPage: currentPage + 1
+      nextPage: currentPage + 1,
     };
 
     let watchlistIds = [];
@@ -38,51 +53,57 @@ router.get('/buildings', async (req, res) => {
       watchlistIds = req.session.watchlistIds || [];
     }
 
-    return res.render('buildings/index', {
-      pageTitle: 'Browse Buildings — LeaseWise NYC',
+    return res.render("buildings/index", {
+      pageTitle: "Browse Buildings — LeaseWise NYC",
       buildings: items,
       pagination,
       watchlistIds,
-      scripts: SCRIPTS
+      scripts: SCRIPTS,
     });
   } catch {
-    return res.render('buildings/index', {
-      pageTitle: 'Browse Buildings — LeaseWise NYC',
+    return res.render("buildings/index", {
+      pageTitle: "Browse Buildings — LeaseWise NYC",
       buildings: [],
-      scripts: SCRIPTS
+      error: getUnexpectedErrorMessage(),
+      scripts: SCRIPTS,
     });
   }
 });
 
-router.get('/buildings/:id', async (req, res) => {
+router.get("/buildings/:id", async (req, res) => {
   try {
     const cookie = req.session?.backendCookie;
     const [buildingResult, reviewsResult] = await Promise.all([
       api.buildings.getById(req.params.id),
-      api.reviews.getForBuilding(req.params.id)
+      api.reviews.getForBuilding(req.params.id),
     ]);
 
     if (!buildingResult.ok) {
-      return res.status(404).render('errors/404', {
-        pageTitle: 'Building Not Found — LeaseWise NYC'
+      return res.status(404).render("errors/404", {
+        pageTitle: "Building Not Found — LeaseWise NYC",
       });
     }
 
     const building = buildingResult.data;
-    building.address = building.streetAddress || building.address || '';
+    building.address = building.streetAddress || building.address || "";
 
     if (building.ownerName) {
-      building.owner = { name: building.ownerName, _id: encodeURIComponent(building.ownerName) };
+      building.owner = {
+        name: building.ownerName,
+        _id: encodeURIComponent(building.ownerName),
+      };
     }
 
-    const reviews = (reviewsResult.ok ? reviewsResult.data : []).map(r => ({
+    const reviews = (reviewsResult.ok ? reviewsResult.data : []).map((r) => ({
       ...r,
       _id: r._id,
-      author: r.firstName ? `${r.firstName} ${r.lastName || ''}`.trim() : 'Anonymous',
-      text: r.reviewText || r.text || '',
+      author: r.firstName
+        ? `${r.firstName} ${r.lastName || ""}`.trim()
+        : "Anonymous",
+      text: r.reviewText || r.text || "",
       rating: r.rating || 0,
       issueTags: r.issueTags || [],
-      createdAt: r.createdAt
+      createdAt: r.createdAt,
     }));
 
     let isWatched = false;
@@ -90,52 +111,64 @@ router.get('/buildings/:id', async (req, res) => {
 
     if (req.session.user && cookie) {
       const watchlistIds = req.session.watchlistIds || [];
-      isWatched = watchlistIds.some(id => String(id) === String(building._id));
+      isWatched = watchlistIds.some(
+        (id) => String(id) === String(building._id),
+      );
 
       const slResult = await api.shortlists.list(cookie);
       if (slResult.ok) {
-        userShortlists = (slResult.data || []).map(sl => ({
+        userShortlists = (slResult.data || []).map((sl) => ({
           _id: sl._id,
-          name: sl.shortlistName || sl.name || ''
+          name: sl.shortlistName || sl.name || "",
         }));
       }
     }
 
-    return res.render('buildings/detail', {
+    const reviewError = reviewsResult.ok
+      ? ""
+      : getUserFriendlyApiError(reviewsResult, "Reviews could not be loaded.");
+
+    return res.render("buildings/detail", {
       pageTitle: `${building.address} — LeaseWise NYC`,
       building,
       reviews,
       isWatched,
       userShortlists,
-      scripts: ['/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/review-form.js', '/public/js/app.js']
+      reviewError,
+      scripts: [
+        "/public/js/dialog.js",
+        "/public/js/watchlist.js",
+        "/public/js/review-form.js",
+        "/public/js/app.js",
+      ],
     });
   } catch {
-    return res.status(500).render('errors/500', {
-      pageTitle: 'Error — LeaseWise NYC'
+    return res.status(500).render("errors/500", {
+      pageTitle: "Error — LeaseWise NYC",
     });
   }
 });
 
-router.get('/portfolios/:ownerName', async (req, res) => {
+router.get("/portfolios/:ownerName", async (req, res) => {
   try {
     const ownerName = decodeURIComponent(req.params.ownerName);
     const result = await api.buildings.getByOwner(ownerName);
 
-    const buildingsList = result.ok ? (result.data || []) : [];
-    const mappedBuildings = buildingsList.map(b => ({
+    const buildingsList = result.ok ? result.data || [] : [];
+    const mappedBuildings = buildingsList.map((b) => ({
       ...b,
-      address: b.streetAddress || b.address || ''
+      address: b.streetAddress || b.address || "",
     }));
 
-    return res.render('portfolios/detail', {
+    return res.render("portfolios/detail", {
       pageTitle: `${ownerName} Portfolio — LeaseWise NYC`,
       portfolio: { name: ownerName, buildingCount: mappedBuildings.length },
       buildings: mappedBuildings,
-      scripts: SCRIPTS
+      scripts: SCRIPTS,
     });
   } catch {
-    return res.status(500).render('errors/500', {
-      pageTitle: 'Error — LeaseWise NYC'
+    return res.status(500).render("errors/500", {
+      pageTitle: "Error — LeaseWise NYC",
     });
   }
 });
