@@ -91,7 +91,7 @@
     {{#if building.owner}}
       <div class="content-panel">
         <h2 class="section-title">{{t "buildings.ownerManager"}}</h2>
-        <p><a href="/portfolios/{{building.owner._id}}">{{building.owner.name}}</a></p>
+        <p><a href="/portfolios/{{building.owner.name}}">{{building.owner.name}}</a></p>
         {{#if building.owner.buildingCount}}
           <p class="form-hint">{{building.owner.buildingCount}} {{t "buildings.buildingsInPortfolio"}}</p>
         {{/if}}

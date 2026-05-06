@@ -11,15 +11,29 @@
         <li>
           <a href="/buildings" {{#if (isActivePath currentPath "/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.buildings"}}</a>
         </li>
-        <li>
-          <a href="/login" {{#if (isActivePath currentPath "/login" "prefix")}}aria-current="page"{{/if}}>{{t "nav.auth"}}</a>
-        </li>
-        <li>
-          <a href="/account" {{#if (isActivePath currentPath "/account" "prefix")}}aria-current="page"{{/if}}>{{t "nav.account"}}</a>
-        </li>
-        <li>
-          <a href="/admin/buildings" {{#if (isActivePath currentPath "/admin/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.admin"}}</a>
-        </li>
+        {{#if currentUser}}
+          <li>
+            <a href="/watchlist" {{#if (isActivePath currentPath "/watchlist" "prefix")}}aria-current="page"{{/if}}>{{t "nav.watchlist"}}</a>
+          </li>
+          <li>
+            <a href="/shortlists" {{#if (isActivePath currentPath "/shortlists" "prefix")}}aria-current="page"{{/if}}>{{t "nav.shortlists"}}</a>
+          </li>
+          <li>
+            <a href="/account" {{#if (isActivePath currentPath "/account" "prefix")}}aria-current="page"{{/if}}>{{t "nav.account"}}</a>
+          </li>
+          {{#if isAdmin}}
+            <li>
+              <a href="/admin/buildings" {{#if (isActivePath currentPath "/admin/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.admin"}}</a>
+            </li>
+          {{/if}}
+          <li>
+            <a href="/logout">{{t "nav.logout"}}</a>
+          </li>
+        {{else}}
+          <li>
+            <a href="/login" {{#if (isActivePath currentPath "/login" "prefix")}}aria-current="page"{{/if}}>{{t "nav.auth"}}</a>
+          </li>
+        {{/if}}
       </ul>
     </nav>
     <div class="site-header__meta">
