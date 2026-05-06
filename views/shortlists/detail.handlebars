@@ -1,1 +1,55 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+    <div>
+      <h1>{{shortlist.name}}</h1>
+      <p class="page-intro">{{shortlist.items.length}}</p>
+    </div>
+    <div style="display:flex;gap:var(--space-sm)">
+      <a class="button button-ghost" href="/compare?shortlistId={{shortlist._id}}">{{t "shortlists.compareAll"}}</a>
+      <button class="button button-danger" type="button" data-dialog-trigger="delete-shortlist-dialog">{{t "shortlists.deleteBtn"}}</button>
+    </div>
+  </div>
+</div>
+
+{{#if shortlist.items.length}}
+  <div style="display:grid;gap:var(--space-lg)">
+    {{#each shortlist.items}}
+      <div class="content-panel">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+          <div>
+            <a href="/buildings/{{this.building._id}}" style="font-family:var(--font-heading);font-size:1.1rem;font-weight:700">
+              {{this.building.address}}
+            </a>
+            <p style="color:var(--color-text-soft);margin:var(--space-xs) 0 0">{{this.building.borough}}</p>
+            {{#if this.building.riskSummary}}
+              {{> risk-badge level=this.building.riskSummary.level score=this.building.riskSummary.score}}
+            {{/if}}
+          </div>
+          <button class="button button-danger" type="button" data-dialog-trigger="remove-item-{{this._id}}">{{t "shortlists.removeBtn"}}</button>
+        </div>
+        <div style="margin-top:var(--space-md)">
+          {{> note-form shortlistId=../shortlist._id itemId=this._id note=this.privateNote}}
+        </div>
+      </div>
+      {{> danger-dialog
+        dialogId=(concat "remove-item-" this._id)
+        title=(t "shortlists.removeDialogTitle")
+        message=(t "shortlists.removeDialogMessage")
+        confirmLabel=(t "shortlists.removeConfirm")
+        formAction=(concat "/shortlists/" ../shortlist._id "/items/" this._id)
+        formMethod="DELETE"
+      }}
+    {{/each}}
+  </div>
+{{else}}
+  {{> empty-state title=(t "shortlists.detailEmptyTitle") message=(t "shortlists.detailEmptyMessage") actionHref="/buildings" actionLabel=(t "shortlists.browseBuildings")}}
+{{/if}}
+
+{{> danger-dialog
+  dialogId="delete-shortlist-dialog"
+  title=(t "shortlists.deleteDialogTitle")
+  message=(t "shortlists.deleteDialogMessage")
+  confirmLabel=(t "shortlists.deleteConfirm")
+  formAction=(concat "/shortlists/" shortlist._id)
+  formMethod="DELETE"
+}}

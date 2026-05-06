@@ -1,1 +1,51 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <h1>{{t "compare.title"}}</h1>
+</div>
+
+{{#if buildings.length}}
+  <div class="compare-table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th scope="col">{{t "compare.colAttribute"}}</th>
+          {{#each buildings}}
+            <th scope="col">
+              <a href="/buildings/{{this._id}}">{{this.address}}</a>
+              <br /><span style="font-weight:400;font-size:.85rem">{{this.borough}}</span>
+            </th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{{t "compare.rowRisk"}}</th>
+          {{#each buildings}}
+            <td>{{#if this.riskSummary}}{{> risk-badge level=this.riskSummary.level score=this.riskSummary.score}}{{else}}—{{/if}}</td>
+          {{/each}}
+        </tr>
+        <tr>
+          <th scope="row">{{t "compare.rowComplaints"}}</th>
+          {{#each buildings}}<td>{{this.riskSummary.complaints}}</td>{{/each}}
+        </tr>
+        <tr>
+          <th scope="row">{{t "compare.rowViolations"}}</th>
+          {{#each buildings}}<td>{{this.riskSummary.violations}}</td>{{/each}}
+        </tr>
+        <tr>
+          <th scope="row">{{t "compare.rowBedbugs"}}</th>
+          {{#each buildings}}<td>{{this.riskSummary.bedbugs}}</td>{{/each}}
+        </tr>
+        <tr>
+          <th scope="row">{{t "compare.rowLitigations"}}</th>
+          {{#each buildings}}<td>{{this.riskSummary.litigations}}</td>{{/each}}
+        </tr>
+        <tr>
+          <th scope="row">{{t "compare.rowReviews"}}</th>
+          {{#each buildings}}<td>{{this.reviewCount}}</td>{{/each}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  {{> empty-state title=(t "compare.emptyTitle") message=(t "compare.emptyMessage") actionHref="/shortlists" actionLabel=(t "compare.myShortlists")}}
+{{/if}}

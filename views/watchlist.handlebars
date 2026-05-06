@@ -1,1 +1,14 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <h1>{{t "watchlist.title"}}</h1>
+  <p class="page-intro">{{t "watchlist.subtitle"}}</p>
+</div>
+
+{{#if buildings.length}}
+  <div class="building-grid">
+    {{#each buildings}}
+      {{> building-card building=this isWatched=true}}
+    {{/each}}
+  </div>
+{{else}}
+  {{> empty-state title=(t "watchlist.emptyTitle") message=(t "watchlist.emptyMessage") actionHref="/buildings" actionLabel=(t "watchlist.browseBuildings")}}
+{{/if}}

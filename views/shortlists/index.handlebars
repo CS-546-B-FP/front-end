@@ -1,1 +1,44 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+    <div>
+      <h1>{{t "shortlists.title"}}</h1>
+      <p class="page-intro">{{t "shortlists.subtitle"}}</p>
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom:var(--space-lg)">
+  <form method="POST" action="/shortlists" style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:flex-end">
+    <div class="form-field" style="flex:1 1 16rem">
+      <label for="shortlist-name">{{t "shortlists.newNameLabel"}}</label>
+      <input id="shortlist-name" name="name" type="text" placeholder="{{t "shortlists.newNamePlaceholder"}}" required />
+    </div>
+    <button class="button button-primary" type="submit">{{t "shortlists.create"}}</button>
+  </form>
+</div>
+
+{{#if shortlists.length}}
+  <div class="shortlist-grid">
+    {{#each shortlists}}
+      <div class="shortlist-card">
+        <a class="shortlist-card__title" href="/shortlists/{{this._id}}">{{this.name}}</a>
+        <p class="shortlist-card__meta">{{this.items.length}}</p>
+        <div class="shortlist-card__actions">
+          <a class="button button-ghost" href="/shortlists/{{this._id}}">{{t "shortlists.view"}}</a>
+          <a class="button button-ghost" href="/compare?shortlistId={{this._id}}">{{t "shortlists.compare"}}</a>
+          <button class="button button-danger" type="button" data-dialog-trigger="delete-shortlist-{{this._id}}">{{t "shortlists.deleteConfirm"}}</button>
+        </div>
+      </div>
+      {{> danger-dialog
+        dialogId=(concat "delete-shortlist-" this._id)
+        title=(t "shortlists.deleteDialogTitle")
+        message=(t "shortlists.deleteDialogMessage")
+        confirmLabel=(t "shortlists.deleteConfirm")
+        formAction=(concat "/shortlists/" this._id)
+        formMethod="DELETE"
+      }}
+    {{/each}}
+  </div>
+{{else}}
+  {{> empty-state title=(t "shortlists.emptyTitle") message=(t "shortlists.emptyMessage")}}
+{{/if}}

@@ -1,1 +1,64 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <h1>{{t "account.title"}}</h1>
+</div>
+
+<div class="content-panel">
+  <h2 class="section-title">{{t "account.profileSection"}}</h2>
+  {{> error-summary errors=errors}}
+  <form method="POST" action="/account" style="display:grid;gap:var(--space-md);max-width:32rem">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="firstName">{{t "account.firstName"}}</label>
+        <input id="firstName" name="firstName" type="text" autocomplete="given-name" value="{{user.firstName}}" required />
+      </div>
+      <div class="form-field">
+        <label for="lastName">{{t "account.lastName"}}</label>
+        <input id="lastName" name="lastName" type="text" autocomplete="family-name" value="{{user.lastName}}" required />
+      </div>
+    </div>
+    <div class="form-field">
+      <label for="email">{{t "account.email"}}</label>
+      <input id="email" name="email" type="email" autocomplete="email" value="{{user.email}}" required />
+    </div>
+    <div class="form-field">
+      <label for="username">{{t "account.username"}}</label>
+      <input id="username" name="username" type="text" autocomplete="username" value="{{user.username}}" required />
+    </div>
+    <button class="button button-primary" type="submit">{{t "account.saveChanges"}}</button>
+  </form>
+</div>
+
+<div class="content-panel">
+  <h2 class="section-title">{{t "account.passwordSection"}}</h2>
+  {{> error-summary errors=passwordErrors}}
+  <form method="POST" action="/account/password" style="display:grid;gap:var(--space-md);max-width:32rem">
+    <div class="form-field">
+      <label for="currentPassword">{{t "account.currentPassword"}}</label>
+      <input id="currentPassword" name="currentPassword" type="password" autocomplete="current-password" required />
+    </div>
+    <div class="form-field">
+      <label for="newPassword">{{t "account.newPassword"}}</label>
+      <input id="newPassword" name="newPassword" type="password" autocomplete="new-password" required />
+    </div>
+    <div class="form-field">
+      <label for="confirmPassword">{{t "account.confirmPassword"}}</label>
+      <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required />
+    </div>
+    <button class="button button-primary" type="submit">{{t "account.updatePassword"}}</button>
+  </form>
+</div>
+
+<div class="content-panel">
+  <h2 class="section-title">{{t "account.dangerSection"}}</h2>
+  <p>{{t "account.dangerDesc"}}</p>
+  <button class="button button-danger" type="button" data-dialog-trigger="delete-account-dialog">{{t "account.deleteAccount"}}</button>
+</div>
+
+{{> danger-dialog
+  dialogId="delete-account-dialog"
+  title=(t "account.deleteDialogTitle")
+  message=(t "account.deleteDialogMessage")
+  confirmLabel=(t "account.deleteDialogConfirm")
+  formAction="/account"
+  formMethod="DELETE"
+}}
