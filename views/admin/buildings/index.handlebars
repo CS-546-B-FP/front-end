@@ -1,1 +1,51 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md)">
+    <h1>{{t "admin.manageTitle"}}</h1>
+    <a class="button button-primary" href="/admin/buildings/new">{{t "admin.addBuilding"}}</a>
+  </div>
+</div>
+
+{{> search-form}}
+
+{{#if buildings.length}}
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col">{{t "admin.colAddress"}}</th>
+          <th scope="col">{{t "admin.colBorough"}}</th>
+          <th scope="col">{{t "admin.colRisk"}}</th>
+          <th scope="col">{{t "admin.colReviews"}}</th>
+          <th scope="col"><span class="sr-only">{{t "admin.colActions"}}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each buildings}}
+          <tr>
+            <td><a href="/buildings/{{this._id}}">{{this.address}}</a></td>
+            <td>{{this.borough}}</td>
+            <td>{{#if this.riskSummary}}{{> risk-badge level=this.riskSummary.level}}{{else}}—{{/if}}</td>
+            <td>{{this.reviewCount}}</td>
+            <td>
+              <div class="admin-actions">
+                <a class="button button-ghost" href="/admin/buildings/{{this._id}}/edit">{{t "admin.editBtn"}}</a>
+                <button class="button button-danger" type="button" data-dialog-trigger="delete-building-{{this._id}}">{{t "admin.deleteBtn"}}</button>
+              </div>
+            </td>
+          </tr>
+          {{> danger-dialog
+            dialogId=(concat "delete-building-" this._id)
+            title=(t "admin.deleteDialogTitle")
+            message=(concat this.address)
+            confirmLabel=(t "admin.deleteConfirm")
+            formAction=(concat "/admin/buildings/" this._id)
+            formMethod="DELETE"
+          }}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{> pagination}}
+{{else}}
+  {{> empty-state title=(t "admin.emptyTitle") message=(t "admin.emptyMessage") actionHref="/admin/buildings/new" actionLabel=(t "admin.addBuilding")}}
+{{/if}}

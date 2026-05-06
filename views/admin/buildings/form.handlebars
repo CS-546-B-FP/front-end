@@ -1,1 +1,74 @@
-{{! Reserved page placeholder. Route-level rendering currently uses views/placeholder.handlebars. }}
+<div class="page-header">
+  <h1>{{#if building._id}}{{t "admin.formEditTitle"}}{{else}}{{t "admin.formAddTitle"}}{{/if}}</h1>
+</div>
+
+<div class="content-panel" style="max-width:48rem">
+  {{> error-summary errors=errors}}
+  <form method="POST" action="{{#if building._id}}/admin/buildings/{{building._id}}{{else}}/admin/buildings{{/if}}">
+    {{#if building._id}}<input type="hidden" name="_method" value="PUT" />{{/if}}
+
+    <div style="display:grid;gap:var(--space-md)">
+      <div class="form-field">
+        <label for="address">{{t "admin.addressLabel"}}</label>
+        <input id="address" name="address" type="text" value="{{building.address}}" required placeholder="{{t "admin.addressPlaceholder"}}" />
+      </div>
+
+      <div class="form-field">
+        <label for="borough">{{t "admin.boroughLabel"}}</label>
+        <select id="borough" name="borough" required>
+          <option value="">{{t "admin.boroughPlaceholder"}}</option>
+          {{#each boroughs}}
+            <option value="{{this}}" {{#if (eq this ../building.borough)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="owner">{{t "admin.ownerLabel"}}</label>
+        <input id="owner" name="owner" type="text" value="{{building.owner}}" placeholder="{{t "admin.ownerPlaceholder"}}" />
+      </div>
+
+      <fieldset style="border:1px solid var(--color-border);border-radius:var(--radius-card);padding:var(--space-md)">
+        <legend style="font-weight:700;padding:0 var(--space-xs)">{{t "admin.riskSummaryLegend"}}</legend>
+        <div style="display:grid;gap:var(--space-md);grid-template-columns:repeat(auto-fill,minmax(10rem,1fr));margin-top:var(--space-sm)">
+          <div class="form-field">
+            <label for="risk-level">{{t "admin.riskLevelLabel"}}</label>
+            <select id="risk-level" name="riskSummary[level]">
+              <option value="">{{t "admin.riskUnknown"}}</option>
+              <option value="low" {{#if (eq building.riskSummary.level "low")}}selected{{/if}}>{{t "admin.riskLow"}}</option>
+              <option value="medium" {{#if (eq building.riskSummary.level "medium")}}selected{{/if}}>{{t "admin.riskMedium"}}</option>
+              <option value="high" {{#if (eq building.riskSummary.level "high")}}selected{{/if}}>{{t "admin.riskHigh"}}</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="risk-score">{{t "admin.scoreLabel"}}</label>
+            <input id="risk-score" name="riskSummary[score]" type="number" min="0" max="100" value="{{building.riskSummary.score}}" />
+          </div>
+          <div class="form-field">
+            <label for="complaints">{{t "admin.complaintsLabel"}}</label>
+            <input id="complaints" name="riskSummary[complaints]" type="number" min="0" value="{{building.riskSummary.complaints}}" />
+          </div>
+          <div class="form-field">
+            <label for="violations">{{t "admin.violationsLabel"}}</label>
+            <input id="violations" name="riskSummary[violations]" type="number" min="0" value="{{building.riskSummary.violations}}" />
+          </div>
+          <div class="form-field">
+            <label for="bedbugs">{{t "admin.bedbugsLabel"}}</label>
+            <input id="bedbugs" name="riskSummary[bedbugs]" type="number" min="0" value="{{building.riskSummary.bedbugs}}" />
+          </div>
+          <div class="form-field">
+            <label for="litigations">{{t "admin.litigationsLabel"}}</label>
+            <input id="litigations" name="riskSummary[litigations]" type="number" min="0" value="{{building.riskSummary.litigations}}" />
+          </div>
+        </div>
+      </fieldset>
+
+      <div style="display:flex;gap:var(--space-sm);justify-content:flex-end">
+        <a class="button button-ghost" href="/admin/buildings">{{t "admin.cancelBtn"}}</a>
+        <button class="button button-primary" type="submit">
+          {{#if building._id}}{{t "admin.saveChanges"}}{{else}}{{t "admin.addBuilding"}}{{/if}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
