@@ -1,3 +1,3 @@
 (() => {
-  document.documentElement.dataset.appMode = 'placeholder-shell';
+  document.documentElement.dataset.appMode = 'live';
 })();

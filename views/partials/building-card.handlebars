@@ -1,5 +1,5 @@
 <article class="building-card">
-  <a class="building-card__address" href="/buildings/{{building._id}}">{{building.address}}</a>
+  <a class="building-card__address" href="/buildings/{{building._id}}">{{#if building.address}}{{building.address}}{{else}}{{building.streetAddress}}{{/if}}</a>
   <div class="building-card__meta">
     <span>{{building.borough}}</span>
     {{#if building.riskSummary}}

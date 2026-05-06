@@ -22,6 +22,46 @@ export function registerHandlebarsHelpers() {
       }
 
       return currentPath === targetPath;
+    },
+    concat(...args) {
+      const options = args.pop();
+      return args.join('');
+    },
+    isWatched(buildingId, watchlistIds) {
+      if (!buildingId || !Array.isArray(watchlistIds)) {
+        return false;
+      }
+      return watchlistIds.some(id => String(id) === String(buildingId));
+    },
+    canDeleteReview(review, currentUser) {
+      if (!review || !currentUser) {
+        return false;
+      }
+      return String(review.userId) === String(currentUser._id);
+    },
+    times(n, options) {
+      let out = '';
+      for (let i = 0; i < n; i++) {
+        out += options.fn(i);
+      }
+      return out;
+    },
+    timesFrom(from, to, options) {
+      let out = '';
+      for (let i = from; i < to; i++) {
+        out += options.fn(i);
+      }
+      return out;
+    },
+    formatDate(date) {
+      if (!date) return '';
+      const d = new Date(date);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
     }
   };
 }

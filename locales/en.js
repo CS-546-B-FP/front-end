@@ -5,9 +5,12 @@ export default {
   nav: {
     home: 'Home',
     buildings: 'Buildings',
-    auth: 'Auth',
-    account: 'User Area',
+    auth: 'Sign in',
+    account: 'Account',
     admin: 'Admin',
+    watchlist: 'Watchlist',
+    shortlists: 'Shortlists',
+    logout: 'Sign out',
     localeLabel: 'Language'
   },
   search: {
