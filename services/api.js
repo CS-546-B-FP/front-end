@@ -1,59 +1,73 @@
-const BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:3001";
 
-async function request(path, { method = 'GET', body, cookie } = {}) {
-  const headers = { Accept: 'application/json' };
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
-  if (cookie) headers['Cookie'] = cookie;
+async function request(path, { method = "GET", body, cookie } = {}) {
+  const headers = { Accept: "application/json" };
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (cookie) headers["Cookie"] = cookie;
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined
-  });
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
 
-  const setCookie = res.headers.get('set-cookie') || '';
-  const payload = await res.json().catch(() => null);
+    const setCookie = res.headers.get("set-cookie") || "";
+    const payload = await res.json().catch(() => null);
 
-  return {
-    ok: res.ok,
-    status: res.status,
-    data: payload?.data ?? null,
-    error: payload?.error || (!res.ok ? `${res.status} ${res.statusText}` : ''),
-    setCookie
-  };
+    return {
+      ok: res.ok,
+      status: res.status,
+      data: payload?.data ?? null,
+      error:
+        payload?.error || (!res.ok ? `${res.status} ${res.statusText}` : ""),
+      setCookie,
+    };
+  } catch {
+    return {
+      ok: false,
+      status: 0,
+      data: null,
+      error: "Unable to connect to the backend server. Please try again later.",
+      setCookie: "",
+    };
+  }
 }
 
 export const auth = {
   async login(username, password) {
-    return request('/auth/login', { method: 'POST', body: { username, password } });
+    return request("/auth/login", {
+      method: "POST",
+      body: { username, password },
+    });
   },
   async register({ firstName, lastName, email, username, password }) {
-    return request('/auth/register', {
-      method: 'POST',
-      body: { firstName, lastName, email, username, password }
+    return request("/auth/register", {
+      method: "POST",
+      body: { firstName, lastName, email, username, password },
     });
   },
   async logout(cookie) {
-    return request('/auth/logout', { method: 'POST', cookie });
-  }
+    return request("/auth/logout", { method: "POST", cookie });
+  },
 };
 
 export const buildings = {
   async list({ search, borough, page, limit } = {}) {
     const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (borough) params.set('borough', borough);
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
+    if (search) params.set("search", search);
+    if (borough) params.set("borough", borough);
+    if (page) params.set("page", String(page));
+    if (limit) params.set("limit", String(limit));
     const qs = params.toString();
-    return request(`/buildings${qs ? `?${qs}` : ''}`);
+    return request(`/buildings${qs ? `?${qs}` : ""}`);
   },
   async getById(id) {
     return request(`/buildings/${encodeURIComponent(id)}`);
   },
   async getByOwner(ownerName) {
     return request(`/portfolios/${encodeURIComponent(ownerName)}`);
-  }
+  },
 };
 
 export const reviews = {
@@ -62,106 +76,112 @@ export const reviews = {
   },
   async create(buildingId, { reviewText, rating, issueTags }, cookie) {
     return request(`/buildings/${encodeURIComponent(buildingId)}/reviews`, {
-      method: 'POST',
+      method: "POST",
       body: { reviewText, rating: Number(rating), issueTags },
-      cookie
+      cookie,
     });
   },
   async update(reviewId, { reviewText, rating, issueTags }, cookie) {
     return request(`/reviews/${encodeURIComponent(reviewId)}`, {
-      method: 'PUT',
+      method: "PUT",
       body: { reviewText, rating: Number(rating), issueTags },
-      cookie
+      cookie,
     });
   },
   async remove(reviewId, cookie) {
-    return request(`/reviews/${encodeURIComponent(reviewId)}`, { method: 'DELETE', cookie });
-  }
+    return request(`/reviews/${encodeURIComponent(reviewId)}`, {
+      method: "DELETE",
+      cookie,
+    });
+  },
 };
 
 export const watchlist = {
   async toggle(buildingId, cookie) {
-    return request('/watchlist/toggle', {
-      method: 'POST',
+    return request("/watchlist/toggle", {
+      method: "POST",
       body: { buildingId },
-      cookie
+      cookie,
     });
-  }
+  },
 };
 
 export const shortlists = {
   async list(cookie) {
-    return request('/shortlists', { cookie });
+    return request("/shortlists", { cookie });
   },
   async create(shortlistName, cookie) {
-    return request('/shortlists', {
-      method: 'POST',
+    return request("/shortlists", {
+      method: "POST",
       body: { shortlistName },
-      cookie
+      cookie,
     });
   },
   async remove(id, cookie) {
-    return request(`/shortlists/${encodeURIComponent(id)}`, { method: 'DELETE', cookie });
+    return request(`/shortlists/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      cookie,
+    });
   },
   async addItem(shortlistId, buildingId, cookie) {
     return request(`/shortlists/${encodeURIComponent(shortlistId)}/items`, {
-      method: 'POST',
+      method: "POST",
       body: { buildingId },
-      cookie
+      cookie,
     });
   },
   async removeItem(shortlistId, buildingId, cookie) {
     return request(
       `/shortlists/${encodeURIComponent(shortlistId)}/items/${encodeURIComponent(buildingId)}`,
-      { method: 'DELETE', cookie }
+      { method: "DELETE", cookie },
     );
   },
   async updateNote(shortlistId, buildingId, privateNote, cookie) {
     return request(
       `/shortlists/${encodeURIComponent(shortlistId)}/items/${encodeURIComponent(buildingId)}/note`,
-      { method: 'PATCH', body: { privateNote }, cookie }
+      { method: "PATCH", body: { privateNote }, cookie },
     );
-  }
+  },
 };
 
 export const users = {
   async getProfile(cookie) {
-    return request('/users/me', { cookie });
+    return request("/users/me", { cookie });
   },
   async updateProfile({ firstName, lastName, email, username }, cookie) {
-    return request('/users/me', {
-      method: 'PUT',
+    return request("/users/me", {
+      method: "PUT",
       body: { firstName, lastName, email, username },
-      cookie
+      cookie,
     });
   },
   async changePassword({ currentPassword, newPassword }, cookie) {
-    return request('/users/me/password', {
-      method: 'PUT',
+    return request("/users/me/password", {
+      method: "PUT",
       body: { currentPassword, newPassword },
-      cookie
+      cookie,
     });
   },
   async deleteAccount(cookie) {
-    return request('/users/me', { method: 'DELETE', cookie });
-  }
+    return request("/users/me", { method: "DELETE", cookie });
+  },
 };
 
 export const admin = {
   async createBuilding(body, cookie) {
-    return request('/admin/buildings', { method: 'POST', body, cookie });
+    return request("/admin/buildings", { method: "POST", body, cookie });
   },
   async updateBuilding(id, body, cookie) {
     return request(`/admin/buildings/${encodeURIComponent(id)}`, {
-      method: 'PUT',
+      method: "PUT",
       body,
-      cookie
+      cookie,
     });
   },
   async deleteBuilding(id, cookie) {
     return request(`/admin/buildings/${encodeURIComponent(id)}`, {
-      method: 'DELETE',
-      cookie
+      method: "DELETE",
+      cookie,
     });
-  }
+  },
 };

@@ -4,6 +4,12 @@
 
 {{> search-form}}
 
+{{#if error}}
+  <div class="error-message" role="alert">
+    {{error}}
+  </div>
+{{/if}}
+
 {{#if buildings.length}}
   <div class="building-grid" aria-label="Building results">
     {{#each buildings}}
@@ -12,5 +18,7 @@
   </div>
   {{> pagination}}
 {{else}}
-  {{> empty-state title=(t "buildings.noResultsTitle") message=(t "buildings.noResultsMessage") actionHref="/buildings" actionLabel=(t "buildings.clearSearch")}}
+  {{#unless error}}
+    {{> empty-state title=(t "buildings.noResultsTitle") message=(t "buildings.noResultsMessage") actionHref="/buildings" actionLabel=(t "buildings.clearSearch")}}
+  {{/unless}}
 {{/if}}
