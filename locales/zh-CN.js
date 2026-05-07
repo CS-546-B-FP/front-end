@@ -195,7 +195,36 @@ export default {
     bedbugsLabel: '臭虫报告',
     litigationsLabel: '诉讼',
     cancelBtn: '取消',
-    saveChanges: '保存更改'
+    saveChanges: '保存更改',
+    users: {
+      title: '用户管理',
+      empty: '暂无用户。',
+      tableCaption: '用户管理表格',
+      columns: {
+        name: '姓名',
+        username: '用户名',
+        email: '邮箱',
+        role: '角色',
+        status: '状态',
+        actions: '操作'
+      },
+      roles: {
+        admin: '管理员',
+        user: '普通用户'
+      },
+      status: {
+        active: '正常',
+        banned: '已封禁'
+      },
+      actions: {
+        promote: '提升为管理员',
+        ban: '封禁用户'
+      },
+      errors: {
+        loadFailed: '加载用户失败。',
+        unexpected: '发生了未预期错误。'
+      }
+    }
   },
   noteForm: {
     label: '私人备注',

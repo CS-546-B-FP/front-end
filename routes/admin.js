@@ -139,4 +139,51 @@ router.delete('/admin/buildings/:id', async (req, res) => {
   return res.redirect('/admin/buildings');
 });
 
+router.get('/admin/users', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.admin.listUsers(cookie);
+
+    const users = result.ok ? result.data || [] : [];
+
+    return res.render('admin/users/index', {
+      pageTitle: 'Manage Users — LeaseWise NYC',
+      users,
+      errors: result.ok
+        ? []
+        : [{ message: result.error || 'Failed to load users.' }],
+      scripts: SCRIPTS
+    });
+  } catch {
+    return res.render('admin/users/index', {
+      pageTitle: 'Manage Users — LeaseWise NYC',
+      users: [],
+      errors: [{ message: 'An unexpected error occurred.' }],
+      scripts: SCRIPTS
+    });
+  }
+});
+
+router.post('/admin/users/:id/promote', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    await api.admin.promoteUser(req.params.id, cookie);
+  } catch {
+    /* ignore */
+  }
+
+  return res.redirect('/admin/users');
+});
+
+router.post('/admin/users/:id/ban', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    await api.admin.banUser(req.params.id, cookie);
+  } catch {
+    /* ignore */
+  }
+
+  return res.redirect('/admin/users');
+});
+
 export default router;
