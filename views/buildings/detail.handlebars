@@ -51,6 +51,13 @@
 
     <section class="content-panel" aria-labelledby="reviews-heading" style="margin-top:var(--space-lg)">
       <h2 class="section-title" id="reviews-heading">{{t "buildings.communityReviews"}}</h2>
+
+      {{#if reviewError}}
+        <div class="error-message" role="alert">
+          {{reviewError}}
+        </div>
+      {{/if}}
+
       {{#if reviews.length}}
         <div class="review-list">
           {{#each reviews}}
@@ -58,7 +65,9 @@
           {{/each}}
         </div>
       {{else}}
-        {{> empty-state title=(t "buildings.noReviewsTitle") message=(t "buildings.noReviewsMessage")}}
+        {{#unless reviewError}}
+          {{> empty-state title=(t "buildings.noReviewsTitle") message=(t "buildings.noReviewsMessage")}}
+        {{/unless}}
       {{/if}}
 
       {{#if currentUser}}
