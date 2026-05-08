@@ -26,16 +26,8 @@
               <a href="/admin/buildings" {{#if (isActivePath currentPath "/admin/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.admin"}}</a>
             </li>
             <li>
-              <a
-                href="/admin/users"
-                {{#if (isActivePath currentPath "/admin/users" "prefix")}}
-                  aria-current="page"
-                {{/if}}
-              >
-                {{t "admin.users.title"}}
-              </a>
+              <a href="/admin/users" {{#if (isActivePath currentPath "/admin/users" "prefix")}}aria-current="page"{{/if}}>{{t "admin.users.title"}}</a>
             </li>
-
           {{/if}}
 
           <li>
