@@ -4,7 +4,7 @@ import * as api from '../services/api.js';
 
 const router = Router();
 
-const SCRIPTS = ['/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/shortlist-note.js', '/public/js/app.js'];
+const SCRIPTS = ['/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/ajax-form.js', '/public/js/shortlist-note.js', '/public/js/app.js'];
 
 router.use('/account', requireAuth);
 router.use('/watchlist', requireAuth);
@@ -257,7 +257,12 @@ router.delete('/shortlists/:id/items/:buildingId', async (req, res) => {
 router.post('/shortlists/:id/items/:buildingId/note', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
-    await api.shortlists.updateNote(req.params.id, req.params.buildingId, req.body.note || '', cookie);
+    await api.shortlists.updateNote(
+      req.params.id,
+      req.params.buildingId,
+      req.body.privateNote || req.body.note || '',
+      cookie
+    );
   } catch { /* ignore */ }
   return res.redirect(`/shortlists/${req.params.id}`);
 });

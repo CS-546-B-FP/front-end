@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import * as api from '../services/api.js';
+import { shortlistNoteValidationSchema, validateForm } from '../utils/validation.js';
 
 const router = Router();
 
@@ -49,10 +50,24 @@ router.post('/api/buildings/:id/review', requireAuth, async (req, res) => {
 router.post('/api/shortlists/:shortlistId/items/:buildingId/note', requireAuth, async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
+    const validation = validateForm(
+      { privateNote: req.body.privateNote ?? req.body.note ?? '' },
+      shortlistNoteValidationSchema
+    );
+
+    if (!validation.isValid) {
+      const message = validation.errors.privateNote?.message || 'Private note is invalid.';
+      return res.status(400).json({
+        success: false,
+        error: message,
+        fieldErrors: { privateNote: message }
+      });
+    }
+
     const result = await api.shortlists.updateNote(
       req.params.shortlistId,
       req.params.buildingId,
-      req.body.note || req.body.privateNote || '',
+      validation.values.privateNote,
       cookie
     );
 
@@ -60,7 +75,11 @@ router.post('/api/shortlists/:shortlistId/items/:buildingId/note', requireAuth, 
       return res.status(result.status || 400).json({ success: false, error: result.error });
     }
 
-    return res.json({ success: true });
+    return res.json({
+      success: true,
+      message: 'Note saved.',
+      data: { privateNote: validation.values.privateNote }
+    });
   } catch {
     return res.status(500).json({ success: false, error: 'Internal server error' });
   }

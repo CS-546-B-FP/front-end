@@ -256,7 +256,14 @@ export default {
     label: 'Private note',
     placeholder: 'Add a private note about this building...',
     hint: 'Only visible to you.',
-    save: 'Save note'
+    save: 'Save note',
+    saving: 'Saving...',
+    edit: 'Edit',
+    cancel: 'Cancel',
+    empty: 'No private note yet.',
+    saved: 'Note saved.',
+    error: 'Unable to save note. Please try again.',
+    tooLong: 'Private note must be 1000 characters or fewer.'
   },
   dialog: {
     cancel: 'Cancel'
