@@ -73,7 +73,7 @@
       const data = await res.json().catch(() => null);
 
       if (res.ok && data?.success !== false) {
-        setMessage(successBox, "Review submitted successfully.");
+        submitBtn.disabled = true;
         window.location.reload();
         return;
       }
