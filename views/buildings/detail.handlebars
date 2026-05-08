@@ -73,7 +73,9 @@
       {{#if currentUser}}
         <details style="margin-top:var(--space-lg)">
           <summary class="button button-primary" style="display:inline-block;cursor:pointer">{{t "buildings.writeReview"}}</summary>
-          <form method="POST" action="/buildings/{{building._id}}/reviews" style="margin-top:var(--space-md);display:grid;gap:var(--space-md)">
+          <form id="review-form" method="POST" action="/buildings/{{building._id}}/reviews" data-review-form style="margin-top:var(--space-md);display:grid;gap:var(--space-md)">
+            <div class="error-message" data-review-error aria-live="assertive" hidden></div>
+
             <div class="form-field">
               <label for="rating">{{t "buildings.ratingLabel"}}</label>
               <select id="rating" name="rating" required>
@@ -87,7 +89,7 @@
             </div>
             <div class="form-field">
               <label for="review-text">{{t "buildings.reviewLabel"}}</label>
-              <textarea id="review-text" name="text" rows="4" style="border:1px solid var(--color-border);border-radius:var(--token-radius-sm);font:inherit;padding:.75rem;resize:vertical;width:100%;box-sizing:border-box" placeholder="{{t "buildings.reviewPlaceholder"}}"></textarea>
+              <textarea id="review-text" name="text" rows="4" required style="border:1px solid var(--color-border);border-radius:var(--token-radius-sm);font:inherit;padding:.75rem;resize:vertical;width:100%;box-sizing:border-box" placeholder="{{t "buildings.reviewPlaceholder"}}"></textarea>
             </div>
             <button class="button button-primary" type="submit">{{t "buildings.submitReview"}}</button>
           </form>

@@ -224,7 +224,33 @@ export default {
         loadFailed: 'Failed to load users.',
         unexpected: 'An unexpected error occurred.'
       }
-    }
+    },
+    reviews: {
+      nav: 'Review Moderation',
+      title: 'Moderate Reviews',
+      subtitle: 'Flag, hide, and delete reviews.',
+      empty: 'No reviews found.',
+      tableCaption: 'Review moderation table',
+      columns: {
+        author: 'Author',
+        building: 'Building',
+        rating: 'Rating',
+        review: 'Review',
+        status: 'Moderation Status',
+        actions: 'Actions'
+      },
+      status: {
+        visible: 'Visible',
+        flagged: 'Flagged',
+        hidden: 'Hidden',
+        deleted: 'Deleted'
+      },
+      actions: {
+        flag: 'Flag Review',
+        hide: 'Hide Review',
+        delete: 'Delete Review'
+      },
+    },
   },
   noteForm: {
     label: 'Private note',

@@ -6,6 +6,7 @@ import {
 } from "../utils/errors.js";
 
 const router = Router();
+const AUTH_SCRIPTS = ["/public/js/loading-form.js", "/public/js/app.js"];
 
 router.get("/login", (req, res) => {
   if (req.session.user) return res.redirect("/");
@@ -13,6 +14,7 @@ router.get("/login", (req, res) => {
     pageTitle: "Login — LeaseWise NYC",
     formData: {},
     errors: [],
+    scripts: AUTH_SCRIPTS,
   });
 });
 
@@ -24,6 +26,7 @@ router.post("/login", async (req, res) => {
       pageTitle: "Login — LeaseWise NYC",
       formData: { username },
       errors: [{ message: "Username and password are required." }],
+      scripts: AUTH_SCRIPTS,
     });
   }
 
@@ -42,6 +45,7 @@ router.post("/login", async (req, res) => {
             ),
           },
         ],
+        scripts: AUTH_SCRIPTS,
       });
     }
 
@@ -60,6 +64,7 @@ router.post("/login", async (req, res) => {
       pageTitle: "Login — LeaseWise NYC",
       formData: { username },
       errors: [{ message: getUnexpectedErrorMessage() }],
+      scripts: AUTH_SCRIPTS,
     });
   }
 });
@@ -70,6 +75,7 @@ router.get("/register", (req, res) => {
     pageTitle: "Register — LeaseWise NYC",
     formData: {},
     errors: [],
+    scripts: AUTH_SCRIPTS,
   });
 });
 
@@ -81,6 +87,7 @@ router.post("/register", async (req, res) => {
       pageTitle: "Register — LeaseWise NYC",
       formData: { firstName, lastName, email, username },
       errors: [{ message: "All fields are required." }],
+      scripts: AUTH_SCRIPTS,
     });
   }
 
@@ -105,6 +112,7 @@ router.post("/register", async (req, res) => {
             ),
           },
         ],
+        scripts: AUTH_SCRIPTS,
       });
     }
 
@@ -114,6 +122,7 @@ router.post("/register", async (req, res) => {
       pageTitle: "Register — LeaseWise NYC",
       formData: { firstName, lastName, email, username },
       errors: [{ message: getUnexpectedErrorMessage() }],
+      scripts: AUTH_SCRIPTS,
     });
   }
 });

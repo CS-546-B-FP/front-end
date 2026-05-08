@@ -224,7 +224,33 @@ export default {
         loadFailed: '加载用户失败。',
         unexpected: '发生了未预期错误。'
       }
-    }
+    },
+    reviews: {
+      nav: '评论审核',
+      title: '评论审核管理',
+      subtitle: '标记、隐藏和删除评论。',
+      empty: '暂无评论。',
+      tableCaption: '评论审核表格',
+      columns: {
+        author: '作者',
+        building: '房屋',
+        rating: '评分',
+        review: '评论',
+        status: '审核状态',
+        actions: '操作'
+      },
+      status: {
+        visible: '公开',
+        flagged: '已标记',
+        hidden: '已隐藏',
+        deleted: '已删除'
+      },
+      actions: {
+        flag: '标记评论',
+        hide: '隐藏评论',
+        delete: '删除评论'
+      },
+    },
   },
   noteForm: {
     label: '私人备注',
