@@ -8,7 +8,7 @@
 
     {{> error-summary errors=errors}}
 
-    <form class="auth-form" id="login-form" action="/login" method="POST" novalidate>
+    <form class="auth-form" id="login-form" action="/login" method="POST" novalidate data-loading-form data-loading-text="Signing in ...">
       <div class="form-field">
         <label for="username">{{t "auth.usernameLabel"}}</label>
         <input id="username" name="username" type="text" autocomplete="username" placeholder="{{t "auth.usernamePlaceholder"}}" required value="{{formData.username}}">
