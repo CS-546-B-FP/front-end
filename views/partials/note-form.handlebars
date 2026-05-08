@@ -1,4 +1,5 @@
 <form class="note-form" method="POST" action="/shortlists/{{shortlistId}}/items/{{itemId}}/note">
+  {{> csrf-field}}
   <label for="note-{{itemId}}" class="form-field label">{{t "noteForm.label"}}</label>
   <textarea
     id="note-{{itemId}}"

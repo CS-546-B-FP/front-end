@@ -34,7 +34,10 @@
           {{/if}}
 
           <li>
-            <a href="/logout">{{t "nav.logout"}}</a>
+            <form class="site-nav__form" method="POST" action="/logout">
+              {{> csrf-field}}
+              <button class="site-nav__button" type="submit">{{t "nav.logout"}}</button>
+            </form>
           </li>
         {{else}}
           <li>

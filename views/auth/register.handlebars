@@ -9,6 +9,7 @@
     {{> error-summary errors=errors}}
 
     <form class="auth-form" id="register-form" action="/register" method="POST" novalidate data-loading-form data-loading-text="Creating account...">
+      {{> csrf-field}}
       <div class="form-grid">
         <div class="form-field">
           <label for="firstName">{{t "auth.firstNameLabel"}}</label>

@@ -9,6 +9,7 @@
     </div>
     {{#if currentUser}}
       <form method="POST" action="/watchlist/{{building._id}}">
+        {{> csrf-field}}
         <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
         <button class="button {{#if isWatched}}button-ghost{{else}}button-primary{{/if}}" type="submit">
           {{#if isWatched}}{{t "buildings.removeWatchlist"}}{{else}}{{t "buildings.addWatchlist"}}{{/if}}
@@ -74,6 +75,7 @@
         <details style="margin-top:var(--space-lg)">
           <summary class="button button-primary" style="display:inline-block;cursor:pointer">{{t "buildings.writeReview"}}</summary>
           <form id="review-form" method="POST" action="/buildings/{{building._id}}/reviews" data-review-form style="margin-top:var(--space-md);display:grid;gap:var(--space-md)">
+            {{> csrf-field}}
             <div class="error-message" data-review-error aria-live="assertive" hidden></div>
 
             <div class="form-field">
@@ -113,6 +115,7 @@
       <div class="content-panel">
         <h2 class="section-title">{{t "buildings.addToShortlist"}}</h2>
         <form method="POST" action="/shortlists/add" style="display:grid;gap:var(--space-sm)">
+          {{> csrf-field}}
           <input type="hidden" name="buildingId" value="{{building._id}}" />
           <div class="form-field">
             <label for="shortlist-select">{{t "buildings.chooseShortlist"}}</label>

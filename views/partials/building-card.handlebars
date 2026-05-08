@@ -12,6 +12,7 @@
     </span>
     {{#if currentUser}}
       <form method="POST" action="/watchlist/{{building._id}}">
+        {{> csrf-field}}
         <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
         <button class="watchlist-btn" type="submit"
           aria-pressed="{{#if isWatched}}true{{else}}false{{/if}}"

@@ -127,7 +127,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   const cookie = req.session.backendCookie;
   if (cookie) {
     api.auth.logout(cookie).catch(() => {});
@@ -136,5 +136,7 @@ router.get("/logout", (req, res) => {
     res.redirect("/");
   });
 });
+
+router.get("/logout", (req, res) => res.redirect("/"));
 
 export default router;

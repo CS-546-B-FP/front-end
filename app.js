@@ -9,6 +9,7 @@ import methodOverride from 'method-override';
 
 import registerRoutes from './routes/index.js';
 import { registerHandlebarsHelpers } from './config/handlebars-helpers.js';
+import { attachCsrfToken, validateCsrfToken } from './middleware/csrf.js';
 import { attachViewContext } from './middleware/view-context.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -42,7 +43,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 
+app.use(attachCsrfToken);
 app.use(attachViewContext);
+app.use(validateCsrfToken);
 registerRoutes(app);
 
 app.listen(port, () => {

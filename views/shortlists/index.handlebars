@@ -9,6 +9,7 @@
 
 <div style="margin-bottom:var(--space-lg)">
   <form method="POST" action="/shortlists" style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:flex-end">
+    {{> csrf-field}}
     <div class="form-field" style="flex:1 1 16rem">
       <label for="shortlist-name">{{t "shortlists.newNameLabel"}}</label>
       <input id="shortlist-name" name="name" type="text" placeholder="{{t "shortlists.newNamePlaceholder"}}" required />
