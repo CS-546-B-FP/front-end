@@ -1,4 +1,10 @@
 import { Router } from 'express';
+import {
+  toAdminBuildingFormViewModel,
+  toAdminReviewListViewModel,
+  toAdminUserListViewModel,
+  toBuildingListViewModel
+} from '../adapters/view-models.js';
 import { requireAdmin } from '../middleware/auth.js';
 import * as api from '../services/api.js';
 
@@ -26,9 +32,7 @@ router.get('/admin/buildings', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
     const result = await api.buildings.list({ limit: 100 });
-    const buildings = result.ok
-      ? (result.data.items || []).map(b => ({ ...b, address: b.streetAddress || b.address || '' }))
-      : [];
+    const buildings = result.ok ? toBuildingListViewModel(result.data.items || []) : [];
 
     return res.render('admin/buildings/index', {
       pageTitle: 'Manage Buildings — LeaseWise NYC',
@@ -61,9 +65,7 @@ router.get('/admin/buildings/:id/edit', async (req, res) => {
       return res.status(404).render('errors/404', { pageTitle: 'Not Found — LeaseWise NYC' });
     }
 
-    const building = result.data;
-    building.address = building.streetAddress || building.address || '';
-    building.owner = building.ownerName || '';
+    const building = toAdminBuildingFormViewModel(result.data);
 
     return res.render('admin/buildings/form', {
       pageTitle: 'Edit Building — LeaseWise NYC',
@@ -146,7 +148,7 @@ router.get('/admin/users', async (req, res) => {
     const flashError = req.session.flashError;
     delete req.session.flashError;
 
-    const users = result.ok ? result.data || [] : [];
+    const users = result.ok ? toAdminUserListViewModel(result.data) : [];
     const errors = flashError
       ? [{ message: flashError }]
       : result.ok
@@ -202,7 +204,7 @@ router.get('/admin/reviews', async (req, res) => {
     const flashError = req.session.flashError;
     delete req.session.flashError;
 
-    const reviews = result.ok ? result.data || [] : [];
+    const reviews = result.ok ? toAdminReviewListViewModel(result.data) : [];
     const errors = flashError
       ? [{ message: flashError }]
       : result.ok

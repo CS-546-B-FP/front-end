@@ -1,4 +1,10 @@
 import { Router } from 'express';
+import {
+  toBuildingListViewModel,
+  toShortlistDetailViewModel,
+  toShortlistItemViewModel,
+  toShortlistListViewModel
+} from '../adapters/view-models.js';
 import { requireAuth } from '../middleware/auth.js';
 import * as api from '../services/api.js';
 
@@ -89,9 +95,7 @@ router.get('/watchlist', async (req, res) => {
 
     const buildingPromises = watchlistIds.map(id => api.buildings.getById(id));
     const results = await Promise.all(buildingPromises);
-    const buildings = results
-      .filter(r => r.ok)
-      .map(r => ({ ...r.data, address: r.data.streetAddress || r.data.address || '' }));
+    const buildings = toBuildingListViewModel(results.filter(r => r.ok).map(r => r.data));
 
     return res.render('watchlist', {
       pageTitle: 'My Watchlist — LeaseWise NYC',
@@ -111,13 +115,7 @@ router.get('/shortlists', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
     const result = await api.shortlists.list(cookie);
-    const shortlists = result.ok
-      ? (result.data || []).map(sl => ({
-          _id: sl._id,
-          name: sl.shortlistName || sl.name || '',
-          items: sl.items || []
-        }))
-      : [];
+    const shortlists = result.ok ? toShortlistListViewModel(result.data) : [];
 
     return res.render('shortlists/index', {
       pageTitle: 'My Shortlists — LeaseWise NYC',
@@ -141,7 +139,8 @@ router.get('/shortlists/:id', async (req, res) => {
       return res.status(404).render('errors/404', { pageTitle: 'Not Found — LeaseWise NYC' });
     }
 
-    const shortlist = (result.data || []).find(sl => String(sl._id) === req.params.id);
+    const shortlist = toShortlistListViewModel(result.data || [])
+      .find(sl => String(sl._id) === req.params.id);
     if (!shortlist) {
       return res.status(404).render('errors/404', { pageTitle: 'Not Found — LeaseWise NYC' });
     }
@@ -150,23 +149,17 @@ router.get('/shortlists/:id', async (req, res) => {
       (shortlist.items || []).map(async (item) => {
         const bid = item.buildingId || item._id;
         const bResult = await api.buildings.getById(bid);
-        return {
-          _id: bid,
-          building: bResult.ok
-            ? { ...bResult.data, address: bResult.data.streetAddress || bResult.data.address || '' }
-            : { _id: bid, address: 'Unknown building', borough: '' },
-          privateNote: item.privateNote || ''
-        };
+        return toShortlistItemViewModel(
+          item,
+          bResult.ok ? bResult.data : { _id: bid, address: 'Unknown building', borough: '' }
+        );
       })
     );
+    const shortlistViewModel = toShortlistDetailViewModel(shortlist, items);
 
     return res.render('shortlists/detail', {
-      pageTitle: `${shortlist.shortlistName || shortlist.name || 'Shortlist'} — LeaseWise NYC`,
-      shortlist: {
-        _id: shortlist._id,
-        name: shortlist.shortlistName || shortlist.name || '',
-        items
-      },
+      pageTitle: `${shortlistViewModel.name || 'Shortlist'} — LeaseWise NYC`,
+      shortlist: shortlistViewModel,
       scripts: SCRIPTS
     });
   } catch {
@@ -203,9 +196,7 @@ router.get('/compare', async (req, res) => {
     const buildingResults = await Promise.all(
       (shortlist.items || []).map(item => api.buildings.getById(item.buildingId || item._id))
     );
-    const buildings = buildingResults
-      .filter(r => r.ok)
-      .map(r => ({ ...r.data, address: r.data.streetAddress || r.data.address || '' }));
+    const buildings = toBuildingListViewModel(buildingResults.filter(r => r.ok).map(r => r.data));
 
     return res.render('compare', {
       pageTitle: 'Compare Buildings — LeaseWise NYC',

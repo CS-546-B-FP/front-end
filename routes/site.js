@@ -1,4 +1,11 @@
 import { Router } from "express";
+import {
+  toBuildingSearchViewModel,
+  toBuildingViewModel,
+  toPortfolioViewModel,
+  toReviewListViewModel,
+  toShortlistListViewModel
+} from "../adapters/view-models.js";
 import * as api from "../services/api.js";
 import {
   getUserFriendlyApiError,
@@ -37,16 +44,7 @@ router.get("/buildings", async (req, res) => {
       });
     }
 
-    const { items, total, page: currentPage, limit } = result.data;
-    const totalPages = Math.ceil(total / limit);
-    const pagination = {
-      page: currentPage,
-      totalPages,
-      hasPrev: currentPage > 1,
-      hasNext: currentPage < totalPages,
-      prevPage: currentPage - 1,
-      nextPage: currentPage + 1,
-    };
+    const { buildings, pagination } = toBuildingSearchViewModel(result.data);
 
     let watchlistIds = [];
     if (req.session.user && req.session.backendCookie) {
@@ -55,7 +53,7 @@ router.get("/buildings", async (req, res) => {
 
     return res.render("buildings/index", {
       pageTitle: "Browse Buildings — LeaseWise NYC",
-      buildings: items,
+      buildings,
       pagination,
       watchlistIds,
       scripts: SCRIPTS,
@@ -84,27 +82,8 @@ router.get("/buildings/:id", async (req, res) => {
       });
     }
 
-    const building = buildingResult.data;
-    building.address = building.streetAddress || building.address || "";
-
-    if (building.ownerName) {
-      building.owner = {
-        name: building.ownerName,
-        _id: encodeURIComponent(building.ownerName),
-      };
-    }
-
-    const reviews = (reviewsResult.ok ? reviewsResult.data : []).map((r) => ({
-      ...r,
-      _id: r._id,
-      author: r.firstName
-        ? `${r.firstName} ${r.lastName || ""}`.trim()
-        : "Anonymous",
-      text: r.reviewText || r.text || "",
-      rating: r.rating || 0,
-      issueTags: r.issueTags || [],
-      createdAt: r.createdAt,
-    }));
+    const building = toBuildingViewModel(buildingResult.data);
+    const reviews = toReviewListViewModel(reviewsResult.ok ? reviewsResult.data : []);
 
     let isWatched = false;
     let userShortlists = [];
@@ -117,10 +96,7 @@ router.get("/buildings/:id", async (req, res) => {
 
       const slResult = await api.shortlists.list(cookie);
       if (slResult.ok) {
-        userShortlists = (slResult.data || []).map((sl) => ({
-          _id: sl._id,
-          name: sl.shortlistName || sl.name || "",
-        }));
+        userShortlists = toShortlistListViewModel(slResult.data);
       }
     }
 
@@ -154,16 +130,15 @@ router.get("/portfolios/:ownerName", async (req, res) => {
     const ownerName = decodeURIComponent(req.params.ownerName);
     const result = await api.buildings.getByOwner(ownerName);
 
-    const buildingsList = result.ok ? result.data || [] : [];
-    const mappedBuildings = buildingsList.map((b) => ({
-      ...b,
-      address: b.streetAddress || b.address || "",
-    }));
+    const { portfolio, buildings } = toPortfolioViewModel(
+      ownerName,
+      result.ok ? result.data || [] : []
+    );
 
     return res.render("portfolios/detail", {
       pageTitle: `${ownerName} Portfolio — LeaseWise NYC`,
-      portfolio: { name: ownerName, buildingCount: mappedBuildings.length },
-      buildings: mappedBuildings,
+      portfolio,
+      buildings,
       scripts: SCRIPTS,
     });
   } catch {
