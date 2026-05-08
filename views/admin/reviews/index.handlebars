@@ -4,15 +4,7 @@
     <p>{{t "admin.reviews.subtitle"}}</p>
   </header>
 
-  {{#if errors.length}}
-    <div class="form-errors" role="alert">
-      <ul>
-        {{#each errors}}
-          <li>{{this.message}}</li>
-        {{/each}}
-      </ul>
-    </div>
-  {{/if}}
+  {{> error-summary errors=errors}}
 
   {{#if reviews.length}}
     <div class="table-wrapper">
@@ -35,22 +27,10 @@
         <tbody>
           {{#each reviews}}
             <tr>
-              <td>
-                {{this.author}}
-              </td>
-
-              <td>
-                {{this.buildingAddress}}
-              </td>
-
-              <td>
-                {{this.rating}}
-              </td>
-
-              <td>
-                {{this.reviewText}}
-              </td>
-
+              <td>{{this.author}}</td>
+              <td>{{this.buildingAddress}}</td>
+              <td>{{this.rating}}</td>
+              <td>{{this.reviewText}}</td>
               <td>
                 {{#if this.isDeleted}}
                   {{t "admin.reviews.status.deleted"}}
@@ -62,39 +42,33 @@
                   {{t "admin.reviews.status.visible"}}
                 {{/if}}
               </td>
-
               <td>
                 <div class="admin-actions">
                   {{#unless this.isFlagged}}
-                    <form
-                      method="POST"
-                      action="/admin/reviews/{{this._id}}/flag"
-                    >
-                      <button type="submit">
-                        {{t "admin.reviews.actions.flag"}}
-                      </button>
+                    <form method="POST" action="/admin/reviews/{{this._id}}/flag">
+                      <button type="submit">{{t "admin.reviews.actions.flag"}}</button>
                     </form>
                   {{/unless}}
 
                   {{#unless this.isHidden}}
-                    <form
-                      method="POST"
-                      action="/admin/reviews/{{this._id}}/hide"
-                    >
-                      <button type="submit">
-                        {{t "admin.reviews.actions.hide"}}
-                      </button>
+                    <form method="POST" action="/admin/reviews/{{this._id}}/hide">
+                      <button type="submit">{{t "admin.reviews.actions.hide"}}</button>
                     </form>
                   {{/unless}}
 
-                  <form
-                    method="POST"
-                    action="/admin/reviews/{{this._id}}/delete"
-                  >
-                    <button type="submit">
+                  {{#unless this.isDeleted}}
+                    <button class="button button-danger" type="button" data-dialog-trigger="delete-review-{{this._id}}">
                       {{t "admin.reviews.actions.delete"}}
                     </button>
-                  </form>
+                    {{> danger-dialog
+                      dialogId=(concat "delete-review-" this._id)
+                      title=(t "admin.reviews.actions.delete")
+                      message=(concat this.author)
+                      confirmLabel=(t "admin.reviews.actions.delete")
+                      formAction=(concat "/admin/reviews/" this._id "/delete")
+                      formMethod="POST"
+                    }}
+                  {{/unless}}
                 </div>
               </td>
             </tr>

@@ -139,21 +139,24 @@ router.delete('/admin/buildings/:id', async (req, res) => {
   return res.redirect('/admin/buildings');
 });
 
-export default router;
-
 router.get('/admin/reviews', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
     const result = await api.admin.listReviews(cookie);
+    const flashError = req.session.flashError;
+    delete req.session.flashError;
 
     const reviews = result.ok ? result.data || [] : [];
+    const errors = flashError
+      ? [{ message: flashError }]
+      : result.ok
+        ? []
+        : [{ message: result.error || 'Failed to load reviews.' }];
 
     return res.render('admin/reviews/index', {
       pageTitle: 'Moderate Reviews — LeaseWise NYC',
       reviews,
-      errors: result.ok
-        ? []
-        : [{ message: result.error || 'Failed to load reviews.' }],
+      errors,
       scripts: SCRIPTS
     });
   } catch {
@@ -169,32 +172,40 @@ router.get('/admin/reviews', async (req, res) => {
 router.post('/admin/reviews/:id/flag', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
-    await api.admin.flagReview(req.params.id, cookie);
+    const result = await api.admin.flagReview(req.params.id, cookie);
+    if (!result.ok) {
+      req.session.flashError = result.error || 'Failed to flag review.';
+    }
   } catch {
-    /* ignore */
+    req.session.flashError = 'An unexpected error occurred.';
   }
-
   return res.redirect('/admin/reviews');
 });
 
 router.post('/admin/reviews/:id/hide', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
-    await api.admin.hideReview(req.params.id, cookie);
+    const result = await api.admin.hideReview(req.params.id, cookie);
+    if (!result.ok) {
+      req.session.flashError = result.error || 'Failed to hide review.';
+    }
   } catch {
-    /* ignore */
+    req.session.flashError = 'An unexpected error occurred.';
   }
-
   return res.redirect('/admin/reviews');
 });
 
 router.post('/admin/reviews/:id/delete', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;
-    await api.admin.deleteReview(req.params.id, cookie);
+    const result = await api.admin.deleteReview(req.params.id, cookie);
+    if (!result.ok) {
+      req.session.flashError = result.error || 'Failed to delete review.';
+    }
   } catch {
-    /* ignore */
+    req.session.flashError = 'An unexpected error occurred.';
   }
-
   return res.redirect('/admin/reviews');
 });
+
+export default router;
