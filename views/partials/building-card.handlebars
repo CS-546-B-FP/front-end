@@ -14,6 +14,7 @@
       <form method="POST" action="/watchlist/{{building._id}}">
         <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
         <button class="watchlist-btn" type="submit"
+          data-watching="{{#if isWatched}}true{{else}}false{{/if}}"
           aria-pressed="{{#if isWatched}}true{{else}}false{{/if}}"
           aria-label="{{#if isWatched}}{{t "buildings.removeWatchlist"}}{{else}}{{t "buildings.addWatchlist"}}{{/if}}">
           {{#if isWatched}}{{t "buildings.watching"}}{{else}}{{t "buildings.watch"}}{{/if}}
