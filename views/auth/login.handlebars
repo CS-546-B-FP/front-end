@@ -9,6 +9,10 @@
     {{> error-summary errors=errors}}
 
     <form class="auth-form" id="login-form" action="/login" method="POST" novalidate data-loading-form data-loading-text="Signing in...">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      {{#if formData.returnTo}}
+        <input type="hidden" name="returnTo" value="{{formData.returnTo}}">
+      {{/if}}
       <div class="form-field">
         <label for="username">{{t "auth.usernameLabel"}}</label>
         <input id="username" name="username" type="text" autocomplete="username" placeholder="{{t "auth.usernamePlaceholder"}}" required value="{{formData.username}}">
@@ -21,7 +25,7 @@
     </form>
 
     <p class="auth-switch">
-      {{t "auth.noAccount"}} <a href="/register">{{t "auth.createAccount"}}</a>
+      {{t "auth.noAccount"}} <a href="{{registerUrl}}">{{t "auth.createAccount"}}</a>
     </p>
   </div>
 </section>

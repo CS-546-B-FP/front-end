@@ -9,6 +9,10 @@
     {{> error-summary errors=errors}}
 
     <form class="auth-form" id="register-form" action="/register" method="POST" novalidate data-loading-form data-loading-text="Creating account...">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      {{#if formData.returnTo}}
+        <input type="hidden" name="returnTo" value="{{formData.returnTo}}">
+      {{/if}}
       <div class="form-grid">
         <div class="form-field">
           <label for="firstName">{{t "auth.firstNameLabel"}}</label>
@@ -39,7 +43,7 @@
     </form>
 
     <p class="auth-switch">
-      {{t "auth.hasAccount"}} <a href="/login">{{t "auth.signIn"}}</a>
+      {{t "auth.hasAccount"}} <a href="{{loginUrl}}">{{t "auth.signIn"}}</a>
     </p>
   </div>
 </section>
