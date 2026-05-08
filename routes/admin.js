@@ -140,3 +140,61 @@ router.delete('/admin/buildings/:id', async (req, res) => {
 });
 
 export default router;
+
+router.get('/admin/reviews', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.admin.listReviews(cookie);
+
+    const reviews = result.ok ? result.data || [] : [];
+
+    return res.render('admin/reviews/index', {
+      pageTitle: 'Moderate Reviews — LeaseWise NYC',
+      reviews,
+      errors: result.ok
+        ? []
+        : [{ message: result.error || 'Failed to load reviews.' }],
+      scripts: SCRIPTS
+    });
+  } catch {
+    return res.render('admin/reviews/index', {
+      pageTitle: 'Moderate Reviews — LeaseWise NYC',
+      reviews: [],
+      errors: [{ message: 'An unexpected error occurred.' }],
+      scripts: SCRIPTS
+    });
+  }
+});
+
+router.post('/admin/reviews/:id/flag', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    await api.admin.flagReview(req.params.id, cookie);
+  } catch {
+    /* ignore */
+  }
+
+  return res.redirect('/admin/reviews');
+});
+
+router.post('/admin/reviews/:id/hide', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    await api.admin.hideReview(req.params.id, cookie);
+  } catch {
+    /* ignore */
+  }
+
+  return res.redirect('/admin/reviews');
+});
+
+router.post('/admin/reviews/:id/delete', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    await api.admin.deleteReview(req.params.id, cookie);
+  } catch {
+    /* ignore */
+  }
+
+  return res.redirect('/admin/reviews');
+});

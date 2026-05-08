@@ -1,0 +1,108 @@
+<section class="admin-reviews-page shell-container">
+  <header class="page-header">
+    <h1>{{t "admin.reviews.title"}}</h1>
+    <p>{{t "admin.reviews.subtitle"}}</p>
+  </header>
+
+  {{#if errors.length}}
+    <div class="form-errors" role="alert">
+      <ul>
+        {{#each errors}}
+          <li>{{this.message}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
+  {{#if reviews.length}}
+    <div class="table-wrapper">
+      <table class="admin-table">
+        <caption class="sr-only">
+          {{t "admin.reviews.tableCaption"}}
+        </caption>
+
+        <thead>
+          <tr>
+            <th scope="col">{{t "admin.reviews.columns.author"}}</th>
+            <th scope="col">{{t "admin.reviews.columns.building"}}</th>
+            <th scope="col">{{t "admin.reviews.columns.rating"}}</th>
+            <th scope="col">{{t "admin.reviews.columns.review"}}</th>
+            <th scope="col">{{t "admin.reviews.columns.status"}}</th>
+            <th scope="col">{{t "admin.reviews.columns.actions"}}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {{#each reviews}}
+            <tr>
+              <td>
+                {{this.author}}
+              </td>
+
+              <td>
+                {{this.buildingAddress}}
+              </td>
+
+              <td>
+                {{this.rating}}
+              </td>
+
+              <td>
+                {{this.reviewText}}
+              </td>
+
+              <td>
+                {{#if this.isDeleted}}
+                  {{t "admin.reviews.status.deleted"}}
+                {{else if this.isHidden}}
+                  {{t "admin.reviews.status.hidden"}}
+                {{else if this.isFlagged}}
+                  {{t "admin.reviews.status.flagged"}}
+                {{else}}
+                  {{t "admin.reviews.status.visible"}}
+                {{/if}}
+              </td>
+
+              <td>
+                <div class="admin-actions">
+                  {{#unless this.isFlagged}}
+                    <form
+                      method="POST"
+                      action="/admin/reviews/{{this._id}}/flag"
+                    >
+                      <button type="submit">
+                        {{t "admin.reviews.actions.flag"}}
+                      </button>
+                    </form>
+                  {{/unless}}
+
+                  {{#unless this.isHidden}}
+                    <form
+                      method="POST"
+                      action="/admin/reviews/{{this._id}}/hide"
+                    >
+                      <button type="submit">
+                        {{t "admin.reviews.actions.hide"}}
+                      </button>
+                    </form>
+                  {{/unless}}
+
+                  <form
+                    method="POST"
+                    action="/admin/reviews/{{this._id}}/delete"
+                  >
+                    <button type="submit">
+                      {{t "admin.reviews.actions.delete"}}
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <p>{{t "admin.reviews.empty"}}</p>
+  {{/if}}
+</section>

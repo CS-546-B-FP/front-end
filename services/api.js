@@ -184,4 +184,29 @@ export const admin = {
       cookie,
     });
   },
+
+  async listReviews(cookie) {
+    return request('/admin/reviews', { cookie });
+  },
+
+  async flagReview(id, cookie) {
+    return request(`/admin/reviews/${encodeURIComponent(id)}/flag`, {
+      method: 'PATCH',
+      cookie
+    });
+  },
+
+  async hideReview(id, cookie) {
+    return request(`/admin/reviews/${encodeURIComponent(id)}/hide`, {
+      method: 'PATCH',
+      cookie
+    });
+  },
+
+  async deleteReview(id, cookie) {
+    return request(`/admin/reviews/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      cookie
+    });
+  },
 };
