@@ -187,4 +187,39 @@
       showError(form, error.message || "Please check your input.");
     }
   });
+  function validateFormRealtime(form) {
+    clearError(form);
+
+    try {
+      validateForm(form);
+    } catch (error) {
+      showError(form, error.message || "Please check your input.");
+    }
+  }
+  document.addEventListener(
+    "blur",
+    (event) => {
+      const form = event.target.closest("form[data-validation]");
+      if (!form) return;
+
+      validateFormRealtime(form);
+    },
+    true,
+  );
+
+  document.addEventListener("input", (event) => {
+    const form = event.target.closest("form[data-validation]");
+    if (!form || !form.querySelector("[data-client-error]:not([hidden])"))
+      return;
+
+    validateFormRealtime(form);
+  });
+
+  document.addEventListener("change", (event) => {
+    const form = event.target.closest("form[data-validation]");
+    if (!form || !form.querySelector("[data-client-error]:not([hidden])"))
+      return;
+
+    validateFormRealtime(form);
+  });
 })();
