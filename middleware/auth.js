@@ -10,7 +10,7 @@ export function requireAdmin(req, res, next) {
     return res.redirect('/login');
   }
   if (req.session.user.role !== 'admin') {
-    return res.status(403).render('errors/404', {
+    return res.status(403).render('errors/403', {
       pageTitle: 'Forbidden — LeaseWise NYC'
     });
   }
