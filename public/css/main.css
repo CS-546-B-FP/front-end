@@ -933,3 +933,7 @@ code {
     transition: none !important;
   }
 }
+
+.table-wrapper {
+  overflow-x: auto;
+}

@@ -1,0 +1,77 @@
+<section class="admin-users-page shell-container">
+  <div class="page-header">
+    <h1>{{t "admin.users.title"}}</h1>
+  </div>
+
+  {{> error-summary errors=errors}}
+
+  {{#if users.length}}
+    <div class="table-wrapper">
+      <table class="admin-table">
+        <caption class="sr-only">
+          {{t "admin.users.tableCaption"}}
+        </caption>
+
+        <thead>
+          <tr>
+            <th scope="col">{{t "admin.users.columns.name"}}</th>
+            <th scope="col">{{t "admin.users.columns.username"}}</th>
+            <th scope="col">{{t "admin.users.columns.email"}}</th>
+            <th scope="col">{{t "admin.users.columns.role"}}</th>
+            <th scope="col">{{t "admin.users.columns.status"}}</th>
+            <th scope="col">{{t "admin.users.columns.actions"}}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {{#each users}}
+            <tr>
+              <td>{{this.firstName}} {{this.lastName}}</td>
+              <td>{{this.username}}</td>
+              <td>{{this.email}}</td>
+              <td>
+                {{#if this.isAdmin}}
+                  {{t "admin.users.roles.admin"}}
+                {{else}}
+                  {{t "admin.users.roles.user"}}
+                {{/if}}
+              </td>
+              <td>
+                {{#if this.isBanned}}
+                  {{t "admin.users.status.banned"}}
+                {{else}}
+                  {{t "admin.users.status.active"}}
+                {{/if}}
+              </td>
+              <td>
+                <div class="admin-actions">
+                  {{#unless this.isAdmin}}
+                    <form method="POST" action="/admin/users/{{this._id}}/promote">
+                      <button type="submit">{{t "admin.users.actions.promote"}}</button>
+                    </form>
+                  {{/unless}}
+
+                  {{#unless this.isBanned}}
+                    <button class="button button-danger" type="button" data-dialog-trigger="ban-user-{{this._id}}">
+                      {{t "admin.users.actions.ban"}}
+                    </button>
+                    {{> danger-dialog
+                      dialogId=(concat "ban-user-" this._id)
+                      title=(t "admin.users.actions.ban")
+                      message=(concat this.username)
+                      confirmLabel=(t "admin.users.actions.ban")
+                      formAction=(concat "/admin/users/" this._id "/ban")
+                      formMethod="POST"
+                    }}
+                  {{/unless}}
+                </div>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <p>{{t "admin.users.empty"}}</p>
+  {{/if}}
+</section>

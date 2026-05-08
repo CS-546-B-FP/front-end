@@ -196,13 +196,41 @@ export default {
     litigationsLabel: '诉讼',
     cancelBtn: '取消',
     saveChanges: '保存更改',
+    users: {
+      title: '用户管理',
+      empty: '暂无用户。',
+      tableCaption: '用户管理表格',
+      columns: {
+        name: '姓名',
+        username: '用户名',
+        email: '邮箱',
+        role: '角色',
+        status: '状态',
+        actions: '操作'
+      },
+      roles: {
+        admin: '管理员',
+        user: '普通用户'
+      },
+      status: {
+        active: '正常',
+        banned: '已封禁'
+      },
+      actions: {
+        promote: '提升为管理员',
+        ban: '封禁用户'
+      },
+      errors: {
+        loadFailed: '加载用户失败。',
+        unexpected: '发生了未预期错误。'
+      }
+    },
     reviews: {
       nav: '评论审核',
       title: '评论审核管理',
       subtitle: '标记、隐藏和删除评论。',
       empty: '暂无评论。',
       tableCaption: '评论审核表格',
-
       columns: {
         author: '作者',
         building: '房屋',
@@ -211,14 +239,12 @@ export default {
         status: '审核状态',
         actions: '操作'
       },
-
       status: {
         visible: '公开',
         flagged: '已标记',
         hidden: '已隐藏',
         deleted: '已删除'
       },
-
       actions: {
         flag: '标记评论',
         hide: '隐藏评论',

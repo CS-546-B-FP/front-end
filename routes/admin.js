@@ -139,6 +139,62 @@ router.delete('/admin/buildings/:id', async (req, res) => {
   return res.redirect('/admin/buildings');
 });
 
+router.get('/admin/users', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.admin.listUsers(cookie);
+    const flashError = req.session.flashError;
+    delete req.session.flashError;
+
+    const users = result.ok ? result.data || [] : [];
+    const errors = flashError
+      ? [{ message: flashError }]
+      : result.ok
+        ? []
+        : [{ message: result.error || 'Failed to load users.' }];
+
+    return res.render('admin/users/index', {
+      pageTitle: 'Manage Users — LeaseWise NYC',
+      users,
+      errors,
+      scripts: SCRIPTS
+    });
+  } catch {
+    return res.render('admin/users/index', {
+      pageTitle: 'Manage Users — LeaseWise NYC',
+      users: [],
+      errors: [{ message: 'An unexpected error occurred.' }],
+      scripts: SCRIPTS
+    });
+  }
+});
+
+router.post('/admin/users/:id/promote', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.admin.promoteUser(req.params.id, cookie);
+    if (!result.ok) {
+      req.session.flashError = result.error || 'Failed to promote user.';
+    }
+  } catch {
+    req.session.flashError = 'An unexpected error occurred.';
+  }
+  return res.redirect('/admin/users');
+});
+
+router.post('/admin/users/:id/ban', async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.admin.banUser(req.params.id, cookie);
+    if (!result.ok) {
+      req.session.flashError = result.error || 'Failed to ban user.';
+    }
+  } catch {
+    req.session.flashError = 'An unexpected error occurred.';
+  }
+  return res.redirect('/admin/users');
+});
+
 router.get('/admin/reviews', async (req, res) => {
   try {
     const cookie = req.session.backendCookie;

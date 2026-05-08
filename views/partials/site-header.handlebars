@@ -26,9 +26,13 @@
               <a href="/admin/buildings" {{#if (isActivePath currentPath "/admin/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.admin"}}</a>
             </li>
             <li>
+              <a href="/admin/users" {{#if (isActivePath currentPath "/admin/users" "prefix")}}aria-current="page"{{/if}}>{{t "admin.users.title"}}</a>
+            </li>
+            <li>
               <a href="/admin/reviews" {{#if (isActivePath currentPath "/admin/reviews" "prefix")}}aria-current="page"{{/if}}>{{t "admin.reviews.nav"}}</a>
             </li>
           {{/if}}
+
           <li>
             <a href="/logout">{{t "nav.logout"}}</a>
           </li>

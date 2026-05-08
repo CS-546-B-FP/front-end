@@ -185,6 +185,24 @@ export const admin = {
     });
   },
 
+  async listUsers(cookie) {
+    return request('/admin/users', { cookie });
+  },
+
+  async promoteUser(id, cookie) {
+    return request(`/admin/users/${encodeURIComponent(id)}/promote`, {
+      method: 'PATCH',
+      cookie
+    });
+  },
+
+  async banUser(id, cookie) {
+    return request(`/admin/users/${encodeURIComponent(id)}/ban`, {
+      method: 'PATCH',
+      cookie
+    });
+  },
+
   async listReviews(cookie) {
     return request('/admin/reviews', { cookie });
   },

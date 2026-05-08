@@ -196,6 +196,35 @@ export default {
     litigationsLabel: 'Litigations',
     cancelBtn: 'Cancel',
     saveChanges: 'Save changes',
+    users: {
+      title: 'Manage Users',
+      empty: 'No users found.',
+      tableCaption: 'User management table',
+      columns: {
+        name: 'Name',
+        username: 'Username',
+        email: 'Email',
+        role: 'Role',
+        status: 'Status',
+        actions: 'Actions'
+      },
+      roles: {
+        admin: 'Admin',
+        user: 'User'
+      },
+      status: {
+        active: 'Active',
+        banned: 'Banned'
+      },
+      actions: {
+        promote: 'Promote to Admin',
+        ban: 'Ban User'
+      },
+      errors: {
+        loadFailed: 'Failed to load users.',
+        unexpected: 'An unexpected error occurred.'
+      }
+    },
     reviews: {
       nav: 'Review Moderation',
       title: 'Moderate Reviews',
@@ -210,14 +239,12 @@ export default {
         status: 'Moderation Status',
         actions: 'Actions'
       },
-
       status: {
         visible: 'Visible',
         flagged: 'Flagged',
         hidden: 'Hidden',
         deleted: 'Deleted'
       },
-
       actions: {
         flag: 'Flag Review',
         hide: 'Hide Review',

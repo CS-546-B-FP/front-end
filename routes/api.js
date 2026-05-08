@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import * as api from '../services/api.js';
 
 const router = Router();
@@ -83,6 +83,56 @@ router.delete('/api/shortlists/:shortlistId/items/:buildingId', requireAuth, asy
 
 router.get('/api/status', (req, res) => {
   return res.json({ status: 'ok', authenticated: !!req.session?.user });
+});
+
+router.post('/api/admin/users/:id/promote', requireAdmin, async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+
+    const result = await api.admin.promoteUser(req.params.id, cookie);
+
+    if (!result.ok) {
+      return res.status(result.status || 400).json({
+        success: false,
+        error: result.error
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: result.data
+    });
+  } catch {
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+router.post('/api/admin/users/:id/ban', requireAdmin, async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+
+    const result = await api.admin.banUser(req.params.id, cookie);
+
+    if (!result.ok) {
+      return res.status(result.status || 400).json({
+        success: false,
+        error: result.error
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: result.data
+    });
+  } catch {
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
 });
 
 export default router;
