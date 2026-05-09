@@ -5,7 +5,7 @@
 <div class="content-panel">
   <h2 class="section-title">{{t "account.profileSection"}}</h2>
   {{> error-summary errors=errors}}
-  <form method="POST" action="/account" style="display:grid;gap:var(--space-md);max-width:32rem">
+  <form method="POST" action="/account" style="display:grid;gap:var(--space-md);max-width:32rem" data-validation="profile">
     {{> csrf-field}}
     <div class="form-grid">
       <div class="form-field">
@@ -32,7 +32,7 @@
 <div class="content-panel">
   <h2 class="section-title">{{t "account.passwordSection"}}</h2>
   {{> error-summary errors=passwordErrors}}
-  <form method="POST" action="/account/password" style="display:grid;gap:var(--space-md);max-width:32rem">
+  <form method="POST" action="/account/password" style="display:grid;gap:var(--space-md);max-width:32rem" data-validation="password">
     {{> csrf-field}}
     <div class="form-field">
       <label for="currentPassword">{{t "account.currentPassword"}}</label>

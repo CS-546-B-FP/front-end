@@ -28,7 +28,8 @@
           button.value = button.dataset.originalValue || button.value;
           delete button.dataset.originalValue;
         } else {
-          button.textContent = button.dataset.originalText || button.textContent;
+          button.textContent =
+            button.dataset.originalText || button.textContent;
           delete button.dataset.originalText;
         }
         button.disabled = false;
@@ -40,8 +41,11 @@
     const forms = document.querySelectorAll("form[data-loading-form]");
 
     for (const form of forms) {
-      form.addEventListener("submit", () => {
-        setLoading(form, true);
+      form.addEventListener("submit", (event) => {
+        setTimeout(() => {
+          if (event.defaultPrevented) return;
+          setLoading(form, true);
+        }, 0);
       });
     }
 

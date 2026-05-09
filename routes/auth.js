@@ -6,7 +6,11 @@ import {
 } from "../utils/errors.js";
 
 const router = Router();
-const AUTH_SCRIPTS = ["/public/js/loading-form.js", "/public/js/app.js"];
+const AUTH_SCRIPTS = [
+  "/public/js/loading-form.js",
+  "/public/js/form-validation.js",
+  "/public/js/app.js",
+];
 
 function normalizeText(value) {
   return typeof value === "string" ? value.trim() : "";

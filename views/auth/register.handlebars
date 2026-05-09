@@ -8,7 +8,7 @@
 
     {{> error-summary errors=errors}}
 
-    <form class="auth-form" id="register-form" action="/register" method="POST" novalidate data-loading-form data-loading-text="Creating account...">
+    <form class="auth-form" id="register-form" action="/register" method="POST" novalidate data-loading-form data-loading-text="Creating account..." data-validation="register">
       {{> csrf-field}}
       {{#if formData.returnTo}}
         <input type="hidden" name="returnTo" value="{{formData.returnTo}}">

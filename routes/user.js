@@ -10,7 +10,7 @@ import * as api from '../services/api.js';
 
 const router = Router();
 
-const SCRIPTS = ['/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/shortlist-note.js', '/public/js/app.js'];
+const SCRIPTS = ['/public/js/form-validation.js', '/public/js/loading-form.js', '/public/js/dialog.js', '/public/js/watchlist.js', '/public/js/shortlist-note.js', '/public/js/app.js'];
 
 router.use('/account', requireAuth);
 router.use('/watchlist', requireAuth);
