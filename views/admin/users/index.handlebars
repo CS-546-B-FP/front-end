@@ -47,6 +47,7 @@
                 <div class="admin-actions">
                   {{#unless this.isAdmin}}
                     <form method="POST" action="/admin/users/{{this._id}}/promote">
+                      {{> csrf-field}}
                       <button type="submit">{{t "admin.users.actions.promote"}}</button>
                     </form>
                   {{/unless}}

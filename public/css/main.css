@@ -119,6 +119,25 @@ code {
   text-decoration: underline;
 }
 
+.site-nav__form {
+  margin: 0;
+}
+
+.site-nav__button {
+  background: none;
+  border: 0;
+  color: var(--color-accent-strong);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.site-nav__button:hover {
+  color: var(--color-accent);
+}
+
 .site-header__meta {
   align-items: center;
   display: flex;

@@ -12,6 +12,7 @@
     </span>
     {{#if currentUser}}
       <form method="POST" action="/watchlist/{{building._id}}" data-error-failed="{{t "watchlist.toggleFailed"}}" data-error-network="{{t "watchlist.toggleNetworkError"}}">
+        {{> csrf-field}}
         <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
         <button class="watchlist-btn" type="submit"
           data-watching="{{#if isWatched}}true{{else}}false{{/if}}"

@@ -37,7 +37,7 @@ export default {
     unexpectedTitle: '发生错误',
     unexpectedMessage: '出现了未预期错误，请稍后再试。',
     forbiddenTitle: '禁止访问',
-    forbiddenMessage: '你没有访问此页面的权限。',
+    forbiddenMessage: '你没有访问此页面的权限。'
   },
   footer: {
     note: 'LeaseWise NYC — 数据来源于纽约市开放数据。'

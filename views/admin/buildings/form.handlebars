@@ -5,6 +5,7 @@
 <div class="content-panel" style="max-width:48rem">
   {{> error-summary errors=errors}}
   <form method="POST" action="{{#if building._id}}/admin/buildings/{{building._id}}{{else}}/admin/buildings{{/if}}">
+    {{> csrf-field}}
     {{#if building._id}}<input type="hidden" name="_method" value="PUT" />{{/if}}
 
     <div style="display:grid;gap:var(--space-md)">
