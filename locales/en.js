@@ -35,7 +35,9 @@ export default {
     notFoundTitle: 'Page not found',
     notFoundMessage: 'The page you requested is not available.',
     unexpectedTitle: 'Something went wrong',
-    unexpectedMessage: 'An unexpected error occurred. Please try again later.'
+    unexpectedMessage: 'An unexpected error occurred. Please try again later.',
+    forbiddenTitle: 'Access denied',
+    forbiddenMessage: 'You do not have permission to access this page.',
   },
   footer: {
     note: 'LeaseWise NYC — Data sourced from NYC Open Data.'
