@@ -51,10 +51,8 @@ const rejectCsrfRequest = (req, res) => {
     return res.status(403).json({ success: false, error: CSRF_ERROR_MESSAGE });
   }
 
-  return res.status(403).render('errors/500', {
-    pageTitle: 'Forbidden - LeaseWise NYC',
-    heading: 'Forbidden',
-    message: CSRF_ERROR_MESSAGE
+  return res.status(403).render('errors/403', {
+    pageTitle: 'Forbidden - LeaseWise NYC'
   });
 };
 
