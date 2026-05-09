@@ -117,7 +117,7 @@ export async function request(path, {
     return {
       ok,
       status: response.status,
-      data: ok ? getResponseData(payload) : null,
+      data: getResponseData(payload),
       error: ok ? '' : parseError ? JSON_ERROR_MESSAGE : getResponseError(response, payload),
       setCookie: response.headers.get('set-cookie') || ''
     };
