@@ -493,6 +493,38 @@ code {
   padding: var(--space-md);
 }
 
+.note-form__header,
+.note-form__view,
+.note-form__meta,
+.note-form__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.note-form__preview {
+  color: var(--color-text);
+  margin: 0;
+  min-width: min(18rem, 100%);
+  white-space: pre-wrap;
+}
+
+.note-form__preview.is-empty {
+  color: var(--color-text-soft);
+  font-style: italic;
+}
+
+.note-form__editor {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.note-form [hidden] {
+  display: none;
+}
+
 .note-form textarea {
   border: 1px solid var(--color-border);
   border-radius: var(--token-radius-sm);
@@ -502,6 +534,30 @@ code {
   resize: vertical;
   width: 100%;
   box-sizing: border-box;
+}
+
+.note-form textarea[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.note-form__status {
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+.note-form__counter {
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+}
+
+.note-form__counter.is-over-limit,
+.form-error {
+  color: var(--color-danger);
+}
+
+.form-error {
+  font-weight: 700;
+  margin: 0;
 }
 
 .error-summary {

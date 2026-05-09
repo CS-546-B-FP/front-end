@@ -1,12 +1,42 @@
-<form class="note-form" method="POST" action="/shortlists/{{shortlistId}}/items/{{itemId}}/note">
+<form
+  class="note-form"
+  method="POST"
+  action="/shortlists/{{shortlistId}}/items/{{itemId}}/note"
+  data-note-form
+  data-note-max-length="1000"
+  data-loading-text="{{t "noteForm.saving"}}"
+  data-note-saved-message="{{t "noteForm.saved"}}"
+  data-note-error-message="{{t "noteForm.error"}}"
+  data-note-too-long-message="{{t "noteForm.tooLong"}}"
+>
   {{> csrf-field}}
-  <label for="note-{{itemId}}" class="form-field label">{{t "noteForm.label"}}</label>
-  <textarea
-    id="note-{{itemId}}"
-    name="note"
-    aria-describedby="note-hint-{{itemId}}"
-    placeholder="{{t "noteForm.placeholder"}}"
-  >{{note}}</textarea>
-  <p class="form-hint" id="note-hint-{{itemId}}">{{t "noteForm.hint"}}</p>
-  <button class="button button-primary" type="submit">{{t "noteForm.save"}}</button>
+  <div class="note-form__header">
+    <label for="note-{{itemId}}" class="form-field label">{{t "noteForm.label"}}</label>
+    <span class="note-form__status" data-ajax-success role="status" aria-live="polite" hidden></span>
+  </div>
+
+  <div class="note-form__view" data-note-view>
+    <p class="note-form__preview" data-note-preview data-empty-text="{{t "noteForm.empty"}}">{{#if note}}{{note}}{{else}}{{t "noteForm.empty"}}{{/if}}</p>
+    <button class="button button-ghost" type="button" data-note-edit>{{t "noteForm.edit"}}</button>
+  </div>
+
+  <div class="note-form__editor" data-note-editor hidden>
+    <textarea
+      id="note-{{itemId}}"
+      name="privateNote"
+      aria-describedby="note-hint-{{itemId}} note-error-{{itemId}}"
+      maxlength="1000"
+      placeholder="{{t "noteForm.placeholder"}}"
+      data-note-input
+    >{{note}}</textarea>
+    <div class="note-form__meta">
+      <p class="form-hint" id="note-hint-{{itemId}}">{{t "noteForm.hint"}}</p>
+      <span class="note-form__counter" data-note-counter aria-live="polite"></span>
+    </div>
+    <p class="form-error" id="note-error-{{itemId}}" data-ajax-error data-field-error="privateNote" role="alert" hidden></p>
+    <div class="note-form__actions">
+      <button class="button button-ghost" type="button" data-note-cancel>{{t "noteForm.cancel"}}</button>
+      <button class="button button-primary" type="submit">{{t "noteForm.save"}}</button>
+    </div>
+  </div>
 </form>

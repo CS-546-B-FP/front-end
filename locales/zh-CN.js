@@ -260,7 +260,14 @@ export default {
     label: '私人备注',
     placeholder: '添加关于此建筑的私人备注...',
     hint: '仅您可见。',
-    save: '保存备注'
+    save: '保存备注',
+    saving: '正在保存...',
+    edit: '编辑',
+    cancel: '取消',
+    empty: '暂无私人备注。',
+    saved: '备注已保存。',
+    error: '无法保存备注，请重试。',
+    tooLong: '私人备注不能超过 1000 个字符。'
   },
   dialog: {
     cancel: '取消'
