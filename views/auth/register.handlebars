@@ -9,7 +9,7 @@
     {{> error-summary errors=errors}}
 
     <form class="auth-form" id="register-form" action="/register" method="POST" novalidate data-loading-form data-loading-text="Creating account...">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      {{> csrf-field}}
       {{#if formData.returnTo}}
         <input type="hidden" name="returnTo" value="{{formData.returnTo}}">
       {{/if}}

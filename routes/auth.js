@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { Router } from "express";
 import * as api from "../services/api.js";
 import {
@@ -8,7 +7,6 @@ import {
 
 const router = Router();
 const AUTH_SCRIPTS = ["/public/js/loading-form.js", "/public/js/app.js"];
-const AUTH_CSRF_SESSION_KEY = "authCsrfToken";
 
 function normalizeText(value) {
   return typeof value === "string" ? value.trim() : "";
@@ -47,21 +45,6 @@ function buildAuthUrl(path, returnTo) {
   return `${path}?${params.toString()}`;
 }
 
-function getAuthCsrfToken(req) {
-  if (!req.session[AUTH_CSRF_SESSION_KEY]) {
-    req.session[AUTH_CSRF_SESSION_KEY] = crypto.randomBytes(32).toString("hex");
-  }
-
-  return req.session[AUTH_CSRF_SESSION_KEY];
-}
-
-function isValidAuthCsrf(req) {
-  const expected = req.session?.[AUTH_CSRF_SESSION_KEY];
-  const submitted = typeof req.body?._csrf === "string" ? req.body._csrf : "";
-
-  return Boolean(expected && submitted && expected === submitted);
-}
-
 function renderLogin(req, res, { formData = {}, errors = [], status = 200 } = {}) {
   const returnTo = getSafeReturnTo(formData.returnTo) || getRequestedReturnTo(req);
 
@@ -69,7 +52,6 @@ function renderLogin(req, res, { formData = {}, errors = [], status = 200 } = {}
     pageTitle: "Login — LeaseWise NYC",
     formData: { ...formData, returnTo },
     errors,
-    csrfToken: getAuthCsrfToken(req),
     registerUrl: buildAuthUrl("/register", returnTo),
     scripts: AUTH_SCRIPTS,
   });
@@ -82,7 +64,6 @@ function renderRegister(req, res, { formData = {}, errors = [], status = 200 } =
     pageTitle: "Register — LeaseWise NYC",
     formData: { ...formData, returnTo },
     errors,
-    csrfToken: getAuthCsrfToken(req),
     loginUrl: buildAuthUrl("/login", returnTo),
     scripts: AUTH_SCRIPTS,
   });
@@ -141,14 +122,6 @@ router.post("/login", async (req, res) => {
   const password = typeof req.body.password === "string" ? req.body.password : "";
   const returnTo = getRequestedReturnTo(req);
 
-  if (!isValidAuthCsrf(req)) {
-    return renderLogin(req, res, {
-      formData: { username, returnTo },
-      errors: [{ message: "Your login session expired. Please try again." }],
-      status: 403,
-    });
-  }
-
   if (!username || !password) {
     return renderLogin(req, res, {
       formData: { username, returnTo },
@@ -200,14 +173,6 @@ router.post("/register", async (req, res) => {
     typeof req.body.confirmPassword === "string" ? req.body.confirmPassword : "";
   const returnTo = getRequestedReturnTo(req);
   const formData = { firstName, lastName, email, username, returnTo };
-
-  if (!isValidAuthCsrf(req)) {
-    return renderRegister(req, res, {
-      formData,
-      errors: [{ message: "Your registration session expired. Please try again." }],
-      status: 403,
-    });
-  }
 
   if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
     return renderRegister(req, res, {
