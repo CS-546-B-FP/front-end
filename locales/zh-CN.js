@@ -119,7 +119,9 @@ export default {
     subtitle: '您正在追踪的建筑。',
     emptyTitle: '关注列表为空',
     emptyMessage: '浏览建筑并点击"关注"将其保存到此处。',
-    browseBuildings: '浏览建筑'
+    browseBuildings: '浏览建筑',
+    toggleFailed: '更新关注列表失败。',
+    toggleNetworkError: '无法更新关注列表，请重试。'
   },
   compare: {
     title: '建筑对比',
