@@ -117,7 +117,9 @@ export default {
     subtitle: 'Buildings you are tracking.',
     emptyTitle: 'Your watchlist is empty',
     emptyMessage: 'Browse buildings and click Watch to save them here.',
-    browseBuildings: 'Browse buildings'
+    browseBuildings: 'Browse buildings',
+    toggleFailed: 'Failed to update watchlist.',
+    toggleNetworkError: 'Unable to update watchlist. Please try again.'
   },
   compare: {
     title: 'Compare Buildings',

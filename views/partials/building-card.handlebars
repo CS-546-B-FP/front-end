@@ -11,10 +11,12 @@
       {{#if building.reviewCount}}{{building.reviewCount}} {{t "reviews.delete"}}{{else}}{{t "buildings.noReviewsYet"}}{{/if}}
     </span>
     {{#if currentUser}}
-      <form method="POST" action="/watchlist/{{building._id}}">
+      <form method="POST" action="/watchlist/{{building._id}}" data-error-failed="{{t "watchlist.toggleFailed"}}" data-error-network="{{t "watchlist.toggleNetworkError"}}">
         <input type="hidden" name="_method" value="{{#if isWatched}}DELETE{{else}}PUT{{/if}}" />
         <button class="watchlist-btn" type="submit"
           data-watching="{{#if isWatched}}true{{else}}false{{/if}}"
+          data-text-watching="{{t "buildings.watching"}}"
+          data-text-watch="{{t "buildings.watch"}}"
           aria-pressed="{{#if isWatched}}true{{else}}false{{/if}}"
           aria-label="{{#if isWatched}}{{t "buildings.removeWatchlist"}}{{else}}{{t "buildings.addWatchlist"}}{{/if}}">
           {{#if isWatched}}{{t "buildings.watching"}}{{else}}{{t "buildings.watch"}}{{/if}}

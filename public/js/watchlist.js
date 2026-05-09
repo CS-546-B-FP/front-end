@@ -17,7 +17,9 @@
   function updateButton(btn, watching) {
     btn.setAttribute("aria-pressed", String(watching));
     btn.dataset.watching = String(watching);
-    btn.textContent = watching ? "Watching" : "Watch";
+    btn.textContent = watching
+      ? (btn.dataset.textWatching || "Watching")
+      : (btn.dataset.textWatch || "Watch");
   }
 
   document.addEventListener("click", async (e) => {
@@ -55,7 +57,7 @@
 
       if (!res.ok || data?.success === false) {
         updateButton(btn, previousWatching);
-        setStatusMessage(form, data?.error || "Failed to update watchlist.");
+        setStatusMessage(form, data?.error || form.dataset.errorFailed || "Failed to update watchlist.");
         return;
       }
 
@@ -63,7 +65,7 @@
       updateButton(btn, watching);
     } catch {
       updateButton(btn, previousWatching);
-      setStatusMessage(form, "Unable to update watchlist. Please try again.");
+      setStatusMessage(form, form.dataset.errorNetwork || "Unable to update watchlist. Please try again.");
     } finally {
       btn.disabled = false;
     }
