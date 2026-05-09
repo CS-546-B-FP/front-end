@@ -8,25 +8,124 @@ import {
 const router = Router();
 const AUTH_SCRIPTS = ["/public/js/loading-form.js", "/public/js/app.js"];
 
-router.get("/login", (req, res) => {
-  if (req.session.user) return res.redirect("/");
-  return res.render("auth/login", {
+function normalizeText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function getSafeReturnTo(value) {
+  if (typeof value !== "string") return "";
+
+  const returnTo = value.trim();
+  if (
+    !returnTo ||
+    !returnTo.startsWith("/") ||
+    returnTo.startsWith("//") ||
+    returnTo.includes("\\")
+  ) {
+    return "";
+  }
+
+  const pathname = returnTo.split("?")[0].split("#")[0];
+  if (["/login", "/register", "/logout"].includes(pathname)) {
+    return "";
+  }
+
+  return returnTo;
+}
+
+function getRequestedReturnTo(req) {
+  return getSafeReturnTo(req.body?.returnTo || req.query?.returnTo);
+}
+
+function buildAuthUrl(path, returnTo) {
+  const safeReturnTo = getSafeReturnTo(returnTo);
+  if (!safeReturnTo) return path;
+
+  const params = new URLSearchParams({ returnTo: safeReturnTo });
+  return `${path}?${params.toString()}`;
+}
+
+function renderLogin(req, res, { formData = {}, errors = [], status = 200 } = {}) {
+  const returnTo = getSafeReturnTo(formData.returnTo) || getRequestedReturnTo(req);
+
+  return res.status(status).render("auth/login", {
     pageTitle: "Login — LeaseWise NYC",
-    formData: {},
-    errors: [],
+    formData: { ...formData, returnTo },
+    errors,
+    registerUrl: buildAuthUrl("/register", returnTo),
     scripts: AUTH_SCRIPTS,
   });
+}
+
+function renderRegister(req, res, { formData = {}, errors = [], status = 200 } = {}) {
+  const returnTo = getSafeReturnTo(formData.returnTo) || getRequestedReturnTo(req);
+
+  return res.status(status).render("auth/register", {
+    pageTitle: "Register — LeaseWise NYC",
+    formData: { ...formData, returnTo },
+    errors,
+    loginUrl: buildAuthUrl("/login", returnTo),
+    scripts: AUTH_SCRIPTS,
+  });
+}
+
+function regenerateSession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((error) => {
+      if (error) return reject(error);
+      return resolve();
+    });
+  });
+}
+
+function saveSession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.save((error) => {
+      if (error) return reject(error);
+      return resolve();
+    });
+  });
+}
+
+async function establishAuthenticatedSession(req, authResult) {
+  const backendCookie = authResult.setCookie || "";
+  let user = authResult.data;
+  let watchlistIds = [];
+
+  if (backendCookie) {
+    const profileResult = await api.users.getProfile(backendCookie);
+    if (profileResult.ok && profileResult.data) {
+      user = profileResult.data;
+      if (Array.isArray(profileResult.data.watchlist)) {
+        watchlistIds = profileResult.data.watchlist;
+      }
+    }
+  }
+
+  await regenerateSession(req);
+
+  req.session.user = user;
+  req.session.backendCookie = backendCookie;
+  req.session.watchlistIds = watchlistIds;
+
+  await saveSession(req);
+}
+
+router.get("/login", (req, res) => {
+  const returnTo = getRequestedReturnTo(req);
+  if (req.session.user) return res.redirect(returnTo || "/");
+  return renderLogin(req, res);
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const username = normalizeText(req.body.username);
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+  const returnTo = getRequestedReturnTo(req);
 
   if (!username || !password) {
-    return res.render("auth/login", {
-      pageTitle: "Login — LeaseWise NYC",
-      formData: { username },
+    return renderLogin(req, res, {
+      formData: { username, returnTo },
       errors: [{ message: "Username and password are required." }],
-      scripts: AUTH_SCRIPTS,
     });
   }
 
@@ -34,9 +133,8 @@ router.post("/login", async (req, res) => {
     const result = await api.auth.login(username, password);
 
     if (!result.ok) {
-      return res.render("auth/login", {
-        pageTitle: "Login — LeaseWise NYC",
-        formData: { username },
+      return renderLogin(req, res, {
+        formData: { username, returnTo },
         errors: [
           {
             message: getUserFriendlyApiError(
@@ -45,49 +143,48 @@ router.post("/login", async (req, res) => {
             ),
           },
         ],
-        scripts: AUTH_SCRIPTS,
       });
     }
 
-    req.session.user = result.data;
-    req.session.backendCookie = result.setCookie || "";
+    await establishAuthenticatedSession(req, result);
 
-    // Fetch full profile to get watchlist IDs
-    const profileResult = await api.users.getProfile(result.setCookie || "");
-    if (profileResult.ok && Array.isArray(profileResult.data?.watchlist)) {
-      req.session.watchlistIds = profileResult.data.watchlist;
-    }
-
-    return res.redirect("/");
+    return res.redirect(returnTo || "/");
   } catch {
-    return res.render("auth/login", {
-      pageTitle: "Login — LeaseWise NYC",
-      formData: { username },
+    return renderLogin(req, res, {
+      formData: { username, returnTo },
       errors: [{ message: getUnexpectedErrorMessage() }],
-      scripts: AUTH_SCRIPTS,
     });
   }
 });
 
 router.get("/register", (req, res) => {
-  if (req.session.user) return res.redirect("/");
-  return res.render("auth/register", {
-    pageTitle: "Register — LeaseWise NYC",
-    formData: {},
-    errors: [],
-    scripts: AUTH_SCRIPTS,
-  });
+  const returnTo = getRequestedReturnTo(req);
+  if (req.session.user) return res.redirect(returnTo || "/");
+  return renderRegister(req, res);
 });
 
 router.post("/register", async (req, res) => {
-  const { firstName, lastName, email, username, password } = req.body;
+  const firstName = normalizeText(req.body.firstName);
+  const lastName = normalizeText(req.body.lastName);
+  const email = normalizeText(req.body.email);
+  const username = normalizeText(req.body.username);
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+  const confirmPassword =
+    typeof req.body.confirmPassword === "string" ? req.body.confirmPassword : "";
+  const returnTo = getRequestedReturnTo(req);
+  const formData = { firstName, lastName, email, username, returnTo };
 
-  if (!firstName || !lastName || !email || !username || !password) {
-    return res.render("auth/register", {
-      pageTitle: "Register — LeaseWise NYC",
-      formData: { firstName, lastName, email, username },
+  if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
+    return renderRegister(req, res, {
+      formData,
       errors: [{ message: "All fields are required." }],
-      scripts: AUTH_SCRIPTS,
+    });
+  }
+
+  if (password !== confirmPassword) {
+    return renderRegister(req, res, {
+      formData,
+      errors: [{ message: "Passwords must match." }],
     });
   }
 
@@ -101,9 +198,8 @@ router.post("/register", async (req, res) => {
     });
 
     if (!result.ok) {
-      return res.render("auth/register", {
-        pageTitle: "Register — LeaseWise NYC",
-        formData: { firstName, lastName, email, username },
+      return renderRegister(req, res, {
+        formData,
         errors: [
           {
             message: getUserFriendlyApiError(
@@ -112,17 +208,21 @@ router.post("/register", async (req, res) => {
             ),
           },
         ],
-        scripts: AUTH_SCRIPTS,
       });
     }
 
-    return res.redirect("/login");
+    const loginResult = await api.auth.login(username, password);
+    if (!loginResult.ok) {
+      return res.redirect(buildAuthUrl("/login", returnTo));
+    }
+
+    await establishAuthenticatedSession(req, loginResult);
+
+    return res.redirect(returnTo || "/");
   } catch {
-    return res.render("auth/register", {
-      pageTitle: "Register — LeaseWise NYC",
-      formData: { firstName, lastName, email, username },
+    return renderRegister(req, res, {
+      formData,
       errors: [{ message: getUnexpectedErrorMessage() }],
-      scripts: AUTH_SCRIPTS,
     });
   }
 });
