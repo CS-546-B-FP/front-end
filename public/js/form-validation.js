@@ -200,7 +200,8 @@
     "blur",
     (event) => {
       const form = event.target.closest("form[data-validation]");
-      if (!form) return;
+      if (!form || !form.querySelector("[data-client-error]:not([hidden])"))
+        return;
 
       validateFormRealtime(form);
     },
