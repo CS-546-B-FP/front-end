@@ -9,7 +9,7 @@
 
   <div class="search-form__row">
     {{! Keyword search }}
-    <div class="search-form__field">
+    <div class="search-form__field search-form__field--grow">
       <label for="building-search">{{t "search.keywordLabel"}}</label>
       <input
         id="building-search"
@@ -44,11 +44,62 @@
       </select>
     </div>
 
-    {{! Submit }}
+    {{! Neighborhood }}
+    <div class="search-form__field">
+      <label for="neighborhood">{{t "search.neighborhoodLabel"}}</label>
+      <input
+        id="neighborhood"
+        type="text"
+        name="neighborhood"
+        value="{{currentQuery.neighborhood}}"
+        placeholder="{{t "search.neighborhoodPlaceholder"}}"
+        maxlength="120"
+        autocomplete="address-level3"
+      />
+    </div>
+
+    {{! Submit row 1 }}
     <div class="search-form__actions">
       <button class="button button-primary" type="submit">
         {{t "search.submit"}}
       </button>
+    </div>
+  </div>
+
+  <div class="search-form__row search-form__row--filters">
+    {{! Risk level }}
+    <div class="search-form__field">
+      <label for="riskLevel">{{t "search.riskLevelLabel"}}</label>
+      <select id="riskLevel" name="riskLevel">
+        <option value="">{{t "search.allRiskLevels"}}</option>
+        <option value="Low" {{#if (eq currentQuery.riskLevel "Low")}}selected{{/if}}>{{t "search.riskLow"}}</option>
+        <option value="Medium" {{#if (eq currentQuery.riskLevel "Medium")}}selected{{/if}}>{{t "search.riskMedium"}}</option>
+        <option value="High" {{#if (eq currentQuery.riskLevel "High")}}selected{{/if}}>{{t "search.riskHigh"}}</option>
+      </select>
+    </div>
+
+    {{! Sort by }}
+    <div class="search-form__field">
+      <label for="sortBy">{{t "search.sortByLabel"}}</label>
+      <select id="sortBy" name="sortBy">
+        <option value="">{{t "search.sortDefault"}}</option>
+        <option value="risk" {{#if (eq currentQuery.sortBy "risk")}}selected{{/if}}>{{t "search.sortRisk"}}</option>
+        <option value="reviews" {{#if (eq currentQuery.sortBy "reviews")}}selected{{/if}}>{{t "search.sortReviews"}}</option>
+        <option value="date" {{#if (eq currentQuery.sortBy "date")}}selected{{/if}}>{{t "search.sortDate"}}</option>
+      </select>
+    </div>
+
+    {{! Sort order }}
+    <div class="search-form__field">
+      <label for="sortOrder">{{t "search.sortOrderLabel"}}</label>
+      <select id="sortOrder" name="sortOrder">
+        <option value="desc" {{#if (eq currentQuery.sortOrder "desc")}}selected{{/if}}>{{t "search.orderDesc"}}</option>
+        <option value="asc" {{#if (eq currentQuery.sortOrder "asc")}}selected{{/if}}>{{t "search.orderAsc"}}</option>
+      </select>
+    </div>
+
+    <div class="search-form__actions search-form__actions--secondary">
+      <a class="button button-ghost" href="/buildings?lang={{locale}}">{{t "search.clearFilters"}}</a>
     </div>
   </div>
 </form>

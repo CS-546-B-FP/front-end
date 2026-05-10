@@ -62,6 +62,25 @@ export function registerHandlebarsHelpers() {
         month: 'short',
         day: 'numeric'
       });
+    },
+
+    queryString(query, options) {
+      const base = query && typeof query === 'object' ? { ...query } : {};
+      const overrides = options?.hash || {};
+      for (const [key, value] of Object.entries(overrides)) {
+        if (value !== undefined && value !== null && value !== '') {
+          base[key] = value;
+        } else if (value === '') {
+          delete base[key];
+        }
+      }
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(base)) {
+        if (value !== undefined && value !== null && value !== '') {
+          params.set(key, Array.isArray(value) ? value[0] : String(value));
+        }
+      }
+      return params.toString();
     }
   };
 }

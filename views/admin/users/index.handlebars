@@ -46,10 +46,17 @@
               <td>
                 <div class="admin-actions">
                   {{#unless this.isAdmin}}
-                    <form method="POST" action="/admin/users/{{this._id}}/promote">
-                      {{> csrf-field}}
-                      <button type="submit">{{t "admin.users.actions.promote"}}</button>
-                    </form>
+                    <button class="button button-danger" type="button" data-dialog-trigger="promote-user-{{this._id}}">
+                      {{t "admin.users.actions.promote"}}
+                    </button>
+                    {{> danger-dialog
+                      dialogId=(concat "promote-user-" this._id)
+                      title=(t "admin.users.actions.promote")
+                      message=(concat this.username)
+                      confirmLabel=(t "admin.users.actions.promote")
+                      formAction=(concat "/admin/users/" this._id "/promote")
+                      formMethod="POST"
+                    }}
                   {{/unless}}
 
                   {{#unless this.isBanned}}

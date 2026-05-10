@@ -47,14 +47,14 @@
                   {{#unless this.isFlagged}}
                     <form method="POST" action="/admin/reviews/{{this._id}}/flag">
                       {{> csrf-field}}
-                      <button type="submit">{{t "admin.reviews.actions.flag"}}</button>
+                      <button type="submit" class="button button-danger">{{t "admin.reviews.actions.flag"}}</button>
                     </form>
                   {{/unless}}
 
                   {{#unless this.isHidden}}
                     <form method="POST" action="/admin/reviews/{{this._id}}/hide">
                       {{> csrf-field}}
-                      <button type="submit">{{t "admin.reviews.actions.hide"}}</button>
+                      <button type="submit" class="button button-danger">{{t "admin.reviews.actions.hide"}}</button>
                     </form>
                   {{/unless}}
 

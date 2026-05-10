@@ -20,6 +20,18 @@ const SCRIPTS = [
   "/public/js/app.js",
 ];
 
+const VALID_RISK_LEVELS = new Set(['Low', 'Medium', 'High']);
+const VALID_SORT_BY = new Set(['risk', 'reviews', 'date']);
+const VALID_SORT_ORDERS = new Set(['asc', 'desc']);
+
+const sanitizeEnum = (value, allowed) =>
+  typeof value === 'string' && allowed.has(value) ? value : undefined;
+
+const sanitizePositiveInt = (value) => {
+  const n = Number(value);
+  return Number.isInteger(n) && n > 0 ? String(n) : undefined;
+};
+
 router.get("/", (req, res) => {
   res.render("home", {
     pageTitle: "LeaseWise NYC — Know before you lease",
@@ -29,8 +41,26 @@ router.get("/", (req, res) => {
 
 router.get("/buildings", async (req, res) => {
   try {
-    const { search, borough, page } = req.query;
-    const result = await api.buildings.list({ search, borough, page });
+    const {
+      search,
+      borough,
+      neighborhood,
+      riskLevel,
+      sortBy,
+      sortOrder,
+      page,
+      limit
+    } = req.query;
+    const result = await api.buildings.list({
+      search,
+      borough,
+      neighborhood: typeof neighborhood === 'string' ? neighborhood : undefined,
+      riskLevel: sanitizeEnum(riskLevel, VALID_RISK_LEVELS),
+      sortBy: sanitizeEnum(sortBy, VALID_SORT_BY),
+      sortOrder: sanitizeEnum(sortOrder, VALID_SORT_ORDERS),
+      page: sanitizePositiveInt(page),
+      limit: sanitizePositiveInt(limit),
+    });
 
     if (!result.ok) {
       return res.render("buildings/index", {
@@ -58,7 +88,8 @@ router.get("/buildings", async (req, res) => {
       watchlistIds,
       scripts: SCRIPTS,
     });
-  } catch {
+  } catch (err) {
+    console.error('[/buildings] Unexpected error:', err);
     return res.render("buildings/index", {
       pageTitle: "Browse Buildings — LeaseWise NYC",
       buildings: [],
@@ -118,7 +149,8 @@ router.get("/buildings/:id", async (req, res) => {
         "/public/js/app.js",
       ],
     });
-  } catch {
+  } catch (err) {
+    console.error('[/buildings/:id] Unexpected error:', err);
     return res.status(500).render("errors/500", {
       pageTitle: "Error — LeaseWise NYC",
     });
@@ -141,7 +173,8 @@ router.get("/portfolios/:ownerName", async (req, res) => {
       buildings,
       scripts: SCRIPTS,
     });
-  } catch {
+  } catch (err) {
+    console.error('[/portfolios/:ownerName] Unexpected error:', err);
     return res.status(500).render("errors/500", {
       pageTitle: "Error — LeaseWise NYC",
     });
