@@ -93,7 +93,7 @@
     <div class="search-form__field">
       <label for="sortOrder">{{t "search.sortOrderLabel"}}</label>
       <select id="sortOrder" name="sortOrder">
-        <option value="desc" {{#unless (eq currentQuery.sortOrder "asc")}}selected{{/unless}}>{{t "search.orderDesc"}}</option>
+        <option value="desc" {{#if (eq currentQuery.sortOrder "desc")}}selected{{/if}}>{{t "search.orderDesc"}}</option>
         <option value="asc" {{#if (eq currentQuery.sortOrder "asc")}}selected{{/if}}>{{t "search.orderAsc"}}</option>
       </select>
     </div>

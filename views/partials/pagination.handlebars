@@ -19,7 +19,7 @@
         {{#if pagination.hasPrev}}
           <a
             class="pagination__link"
-            href="?{{queryString currentQuery page=pagination.prevPage lang=locale}}"
+            href="?{{{queryString currentQuery page=pagination.prevPage lang=locale}}}"
             rel="prev"
           >
             {{t "pagination.prev"}}
@@ -51,7 +51,7 @@
         {{#if pagination.hasNext}}
           <a
             class="pagination__link"
-            href="?{{queryString currentQuery page=pagination.nextPage lang=locale}}"
+            href="?{{{queryString currentQuery page=pagination.nextPage lang=locale}}}"
             rel="next"
           >
             {{t "pagination.next"}}

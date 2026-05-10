@@ -70,14 +70,14 @@ export function registerHandlebarsHelpers() {
       for (const [key, value] of Object.entries(overrides)) {
         if (value !== undefined && value !== null && value !== '') {
           base[key] = value;
-        } else if (Object.prototype.hasOwnProperty.call(overrides, key) && value === '') {
+        } else if (value === '') {
           delete base[key];
         }
       }
       const params = new URLSearchParams();
       for (const [key, value] of Object.entries(base)) {
         if (value !== undefined && value !== null && value !== '') {
-          params.set(key, String(value));
+          params.set(key, Array.isArray(value) ? value[0] : String(value));
         }
       }
       return params.toString();
