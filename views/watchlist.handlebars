@@ -4,6 +4,26 @@
 </div>
 
 {{#if buildings.length}}
+  {{#if recentRecords.length}}
+    <section class="content-panel" aria-labelledby="recent-activity-heading" style="margin-bottom:var(--space-xl)">
+      <h2 class="section-title" id="recent-activity-heading">{{t "watchlist.recentActivity"}}</h2>
+      <div class="records-list">
+        {{#each recentRecords}}
+          <div class="record-item record-item--{{this.type}}">
+            <p class="record-item__type">{{this.type}}</p>
+            <p class="record-item__desc">
+              <a href="/buildings/{{this.buildingId}}">{{this.buildingAddress}}</a>
+              {{#if this.category}} — {{this.category}}{{/if}}
+              {{#if this.status}} <span class="tag">{{this.status}}</span>{{/if}}
+            </p>
+            {{#if this.date}}<p class="record-item__date">{{formatDate this.date}}</p>{{/if}}
+          </div>
+        {{/each}}
+      </div>
+    </section>
+  {{/if}}
+
+  <h2 class="section-title">{{t "watchlist.watchedBuildings"}}</h2>
   <div class="building-grid">
     {{#each buildings}}
       {{> building-card building=this isWatched=true}}

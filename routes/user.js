@@ -95,17 +95,39 @@ router.get('/watchlist', async (req, res) => {
 
     const buildingPromises = watchlistIds.map(id => api.buildings.getById(id));
     const results = await Promise.all(buildingPromises);
-    const buildings = toBuildingListViewModel(results.filter(r => r.ok).map(r => r.data));
+    const rawBuildings = results.filter(r => r.ok).map(r => r.data);
+    const buildings = toBuildingListViewModel(rawBuildings);
+
+    const recentRecords = [];
+    for (const b of rawBuildings) {
+      const records = b.housingRecords || [];
+      const sorted = [...records].sort((a, b) => new Date(b.recordDate || 0) - new Date(a.recordDate || 0));
+      for (const rec of sorted.slice(0, 3)) {
+        recentRecords.push({
+          buildingId: b._id,
+          buildingAddress: b.streetAddress || b.address || 'Unknown',
+          borough: b.borough || '',
+          type: rec.recordType || rec.type || 'record',
+          category: rec.category || '',
+          status: rec.status || '',
+          date: rec.recordDate || rec.date || null
+        });
+      }
+    }
+    recentRecords.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    const topRecords = recentRecords.slice(0, 15);
 
     return res.render('watchlist', {
       pageTitle: 'My Watchlist — LeaseWise NYC',
       buildings,
+      recentRecords: topRecords,
       scripts: SCRIPTS
     });
   } catch {
     return res.render('watchlist', {
       pageTitle: 'My Watchlist — LeaseWise NYC',
       buildings: [],
+      recentRecords: [],
       scripts: SCRIPTS
     });
   }
