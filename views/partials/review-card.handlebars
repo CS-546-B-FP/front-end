@@ -1,4 +1,4 @@
-<article class="review-card">
+<article class="review-card" data-review-id="{{review._id}}" data-building-id="{{review.buildingId}}">
   <div class="review-card__header">
     <div>
       <span class="review-card__stars" aria-label="{{review.rating}} out of 5 stars">
@@ -7,17 +7,45 @@
       <p class="review-card__meta">{{review.author}} &middot; {{formatDate review.createdAt}}</p>
     </div>
     {{#if canDelete}}
-      <button class="button button-ghost" type="button"
-        data-dialog-trigger="delete-review-{{review._id}}"
-        aria-label="{{t "reviews.delete"}}">{{t "reviews.delete"}}</button>
+      <div class="review-card__actions">
+        <button class="button button-ghost" type="button" data-review-edit-trigger aria-label="{{t "reviews.edit"}}">{{t "reviews.edit"}}</button>
+        <button class="button button-ghost" type="button"
+          data-dialog-trigger="delete-review-{{review._id}}"
+          aria-label="{{t "reviews.delete"}}">{{t "reviews.delete"}}</button>
+      </div>
     {{/if}}
   </div>
-  {{#if review.text}}<p>{{review.text}}</p>{{/if}}
-  {{#if review.issueTags.length}}
-    <ul class="review-card__tags" aria-label="Issue tags">
-      {{#each review.issueTags}}
-        <li class="tag">{{this}}</li>
-      {{/each}}
-    </ul>
+  <div data-review-display>
+    {{#if review.text}}<p>{{review.text}}</p>{{/if}}
+    {{#if review.issueTags.length}}
+      <ul class="review-card__tags" aria-label="Issue tags">
+        {{#each review.issueTags}}
+          <li class="tag">{{this}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+  {{#if canDelete}}
+    <form data-review-edit-form hidden style="margin-top:var(--space-sm);display:grid;gap:var(--space-sm)">
+      <div class="form-field">
+        <label for="edit-rating-{{review._id}}">{{t "buildings.ratingLabel"}}</label>
+        <select id="edit-rating-{{review._id}}" name="rating" required>
+          <option value="5" {{#if (eq review.rating 5)}}selected{{/if}}>5</option>
+          <option value="4" {{#if (eq review.rating 4)}}selected{{/if}}>4</option>
+          <option value="3" {{#if (eq review.rating 3)}}selected{{/if}}>3</option>
+          <option value="2" {{#if (eq review.rating 2)}}selected{{/if}}>2</option>
+          <option value="1" {{#if (eq review.rating 1)}}selected{{/if}}>1</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="edit-text-{{review._id}}">{{t "buildings.reviewLabel"}}</label>
+        <textarea id="edit-text-{{review._id}}" name="reviewText" rows="3" required style="border:1px solid var(--color-border);border-radius:var(--token-radius-sm);font:inherit;padding:.75rem;resize:vertical;width:100%;box-sizing:border-box">{{review.text}}</textarea>
+      </div>
+      <div style="display:flex;gap:var(--space-sm)">
+        <button class="button button-primary" type="submit">{{t "reviews.saveEdit"}}</button>
+        <button class="button button-ghost" type="button" data-review-edit-cancel>{{t "dialog.cancel"}}</button>
+      </div>
+      <div class="error-message" data-review-edit-error aria-live="assertive" hidden></div>
+    </form>
   {{/if}}
 </article>

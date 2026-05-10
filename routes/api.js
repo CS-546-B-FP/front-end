@@ -100,6 +100,40 @@ router.delete('/api/shortlists/:shortlistId/items/:buildingId', requireAuth, asy
   }
 });
 
+router.put('/api/reviews/:id', requireAuth, async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.reviews.update(req.params.id, {
+      reviewText: req.body.reviewText || req.body.text || '',
+      rating: Number(req.body.rating),
+      issueTags: req.body.issueTags ? [].concat(req.body.issueTags) : []
+    }, cookie);
+
+    if (!result.ok) {
+      return res.status(result.status || 400).json({ success: false, error: result.error });
+    }
+
+    return res.json({ success: true, data: result.data });
+  } catch {
+    return res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+router.delete('/api/reviews/:id', requireAuth, async (req, res) => {
+  try {
+    const cookie = req.session.backendCookie;
+    const result = await api.reviews.remove(req.params.id, cookie);
+
+    if (!result.ok) {
+      return res.status(result.status || 400).json({ success: false, error: result.error });
+    }
+
+    return res.json({ success: true });
+  } catch {
+    return res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
 router.get('/api/status', (req, res) => {
   return res.json({ status: 'ok', authenticated: !!req.session?.user });
 });

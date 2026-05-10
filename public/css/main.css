@@ -339,6 +339,20 @@ code {
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 }
 
+.trends-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: var(--space-lg);
+}
+
+.trend-card {
+  padding: var(--space-lg);
+}
+
+.risk-bar__segment--low { background: var(--token-color-risk-low); }
+.risk-bar__segment--medium { background: var(--token-color-risk-medium); }
+.risk-bar__segment--high { background: var(--token-color-risk-high); }
+
 .stats-strip {
   background: var(--color-surface-subtle);
   border: 1px solid var(--color-border);
@@ -395,6 +409,11 @@ code {
 .review-card__meta {
   color: var(--color-text-soft);
   font-size: 0.85rem;
+}
+
+.review-card__actions {
+  display: flex;
+  gap: var(--space-xs);
 }
 
 .review-card__tags {
@@ -849,6 +868,12 @@ code {
   color: var(--color-text-muted);
   font-size: 0.9rem;
   margin: var(--space-xs) 0 0;
+}
+
+.record-item__date {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
 }
 
 @media (max-width: 900px) {
