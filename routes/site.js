@@ -29,8 +29,26 @@ router.get("/", (req, res) => {
 
 router.get("/buildings", async (req, res) => {
   try {
-    const { search, borough, page } = req.query;
-    const result = await api.buildings.list({ search, borough, page });
+    const {
+      search,
+      borough,
+      neighborhood,
+      riskLevel,
+      sortBy,
+      sortOrder,
+      page,
+      limit
+    } = req.query;
+    const result = await api.buildings.list({
+      search,
+      borough,
+      neighborhood,
+      riskLevel,
+      sortBy,
+      sortOrder,
+      page,
+      limit
+    });
 
     if (!result.ok) {
       return res.render("buildings/index", {

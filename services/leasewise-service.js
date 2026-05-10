@@ -153,8 +153,28 @@ export const auth = {
 };
 
 export const buildings = {
-  async list({ search, borough, page, limit } = {}) {
-    return request(appendQuery('/buildings', { search, borough, page, limit }));
+  async list({
+    search,
+    borough,
+    neighborhood,
+    riskLevel,
+    sortBy,
+    sortOrder,
+    page,
+    limit
+  } = {}) {
+    return request(
+      appendQuery('/buildings', {
+        search,
+        borough,
+        neighborhood,
+        riskLevel,
+        sortBy,
+        sortOrder,
+        page,
+        limit
+      })
+    );
   },
 
   async getById(id) {
