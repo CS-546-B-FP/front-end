@@ -5,6 +5,7 @@ export default {
   nav: {
     home: '首页',
     buildings: '房屋',
+    trends: '社区趋势',
     auth: '登录',
     account: '账户',
     admin: '管理后台',
@@ -55,6 +56,18 @@ export default {
     forbiddenTitle: '禁止访问',
     forbiddenMessage: '你没有访问此页面的权限。'
   },
+  trends: {
+    title: '社区趋势',
+    subtitle: '按行政区汇总投诉、违规及常见住房问题。',
+    buildings: '栋建筑',
+    riskDistribution: '风险分布',
+    low: '低风险',
+    medium: '中风险',
+    high: '高风险',
+    topIssues: '热门问题类别',
+    emptyTitle: '暂无趋势数据',
+    emptyMessage: '建筑数据加载后将显示趋势信息。'
+  },
   footer: {
     note: 'LeaseWise NYC — 数据来源于纽约市开放数据。'
   },
@@ -99,7 +112,13 @@ export default {
     chooseShortlist: '选择短名单',
     watching: '已关注',
     watch: '关注',
-    noReviewsYet: '暂无评价'
+    noReviewsYet: '暂无评价',
+    saferAlternatives: '附近更安全的替代选择',
+    saferAlternativesDesc: '以下是同一行政区内投诉和违规记录更少的建筑。',
+    customWeighting: '自定义风险评分',
+    customWeightingDesc: '调整各因素的权重，点击"应用"按权重重新排序建筑。',
+    applyWeights: '应用权重',
+    resetWeights: '重置'
   },
   stats: {
     complaints: '投诉',
@@ -108,7 +127,12 @@ export default {
     litigations: '诉讼'
   },
   reviews: {
-    delete: '删除'
+    delete: '删除',
+    edit: '编辑',
+    saveEdit: '保存',
+    deleteDialogTitle: '确认删除评价？',
+    deleteDialogMessage: '此操作将永久删除您的评价，且无法撤销。',
+    deleteConfirm: '删除评价'
   },
   account: {
     title: '我的账户',
@@ -137,7 +161,9 @@ export default {
     emptyMessage: '浏览建筑并点击"关注"将其保存到此处。',
     browseBuildings: '浏览建筑',
     toggleFailed: '更新关注列表失败。',
-    toggleNetworkError: '无法更新关注列表，请重试。'
+    toggleNetworkError: '无法更新关注列表，请重试。',
+    recentActivity: '最近动态',
+    watchedBuildings: '已关注建筑'
   },
   compare: {
     title: '建筑对比',

@@ -183,6 +183,18 @@ export const buildings = {
 
   async getByOwner(ownerName) {
     return request(`/portfolios/${encodeURIComponent(ownerName)}`);
+  },
+
+  async getTrends(borough) {
+    return request(
+      appendQuery('/neighborhoods/trends', { borough })
+    );
+  },
+
+  async getAlternatives(id, limit) {
+    return request(
+      appendQuery(`/buildings/${encodeURIComponent(id)}/alternatives`, { limit })
+    );
   }
 };
 

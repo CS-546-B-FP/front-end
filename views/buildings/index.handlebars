@@ -11,6 +11,35 @@
 {{/if}}
 
 {{#if buildings.length}}
+  <details class="content-panel" style="margin-bottom:var(--space-lg)">
+    <summary class="button button-ghost" style="cursor:pointer">{{t "buildings.customWeighting"}}</summary>
+    <div id="custom-weighting" style="margin-top:var(--space-md)">
+      <p class="form-hint" style="margin-bottom:var(--space-md)">{{t "buildings.customWeightingDesc"}}</p>
+      <div class="weight-controls" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:var(--space-md)">
+        <div class="form-field">
+          <label for="weight-complaints">{{t "stats.complaints"}} <span data-weight-value="complaints">1</span>x</label>
+          <input type="range" id="weight-complaints" data-weight="complaints" min="0" max="5" step="1" value="1" style="width:100%">
+        </div>
+        <div class="form-field">
+          <label for="weight-violations">{{t "stats.violations"}} <span data-weight-value="violations">2</span>x</label>
+          <input type="range" id="weight-violations" data-weight="violations" min="0" max="5" step="1" value="2" style="width:100%">
+        </div>
+        <div class="form-field">
+          <label for="weight-bedbugs">{{t "stats.bedbugs"}} <span data-weight-value="bedbugs">3</span>x</label>
+          <input type="range" id="weight-bedbugs" data-weight="bedbugs" min="0" max="5" step="1" value="3" style="width:100%">
+        </div>
+        <div class="form-field">
+          <label for="weight-litigations">{{t "stats.litigations"}} <span data-weight-value="litigations">4</span>x</label>
+          <input type="range" id="weight-litigations" data-weight="litigations" min="0" max="5" step="1" value="4" style="width:100%">
+        </div>
+      </div>
+      <button id="apply-weights" class="button button-primary" type="button" style="margin-top:var(--space-md)">{{t "buildings.applyWeights"}}</button>
+      <button id="reset-weights" class="button button-ghost" type="button" style="margin-top:var(--space-md)">{{t "buildings.resetWeights"}}</button>
+    </div>
+  </details>
+{{/if}}
+
+{{#if buildings.length}}
   <div class="building-grid" aria-label="Building results">
     {{#each buildings}}
       {{> building-card building=this isWatched=(isWatched this._id ../watchlistIds)}}

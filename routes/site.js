@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  toBuildingListViewModel,
   toBuildingSearchViewModel,
   toBuildingViewModel,
   toPortfolioViewModel,
@@ -17,6 +18,7 @@ const router = Router();
 const SCRIPTS = [
   "/public/js/dialog.js",
   "/public/js/watchlist.js",
+  "/public/js/custom-weight.js",
   "/public/js/app.js",
 ];
 
@@ -135,6 +137,16 @@ router.get("/buildings/:id", async (req, res) => {
       ? ""
       : getUserFriendlyApiError(reviewsResult, "Reviews could not be loaded.");
 
+    let alternatives = [];
+    if (building.riskSummary && building.riskSummary.level !== 'low') {
+      try {
+        const altResult = await api.buildings.getAlternatives(req.params.id, 5);
+        if (altResult.ok && altResult.data) {
+          alternatives = toBuildingListViewModel(altResult.data.alternatives || altResult.data || []);
+        }
+      } catch { /* ignore */ }
+    }
+
     return res.render("buildings/detail", {
       pageTitle: `${building.address} — LeaseWise NYC`,
       building,
@@ -142,10 +154,12 @@ router.get("/buildings/:id", async (req, res) => {
       isWatched,
       userShortlists,
       reviewError,
+      alternatives,
       scripts: [
         "/public/js/dialog.js",
         "/public/js/watchlist.js",
         "/public/js/review-form.js",
+        "/public/js/review-manage.js",
         "/public/js/app.js",
       ],
     });
@@ -153,6 +167,28 @@ router.get("/buildings/:id", async (req, res) => {
     console.error('[/buildings/:id] Unexpected error:', err);
     return res.status(500).render("errors/500", {
       pageTitle: "Error — LeaseWise NYC",
+    });
+  }
+});
+
+router.get("/trends", async (req, res) => {
+  try {
+    const { borough } = req.query;
+    const result = await api.buildings.getTrends(borough);
+
+    return res.render("trends", {
+      pageTitle: "Neighborhood Trends — LeaseWise NYC",
+      trends: result.ok ? result.data : [],
+      selectedBorough: borough || '',
+      scripts: SCRIPTS,
+    });
+  } catch (err) {
+    console.error('[/trends] Unexpected error:', err);
+    return res.render("trends", {
+      pageTitle: "Neighborhood Trends — LeaseWise NYC",
+      trends: [],
+      selectedBorough: '',
+      scripts: SCRIPTS,
     });
   }
 });

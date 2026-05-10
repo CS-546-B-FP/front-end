@@ -1,0 +1,82 @@
+<div class="page-header">
+  <h1>{{t "trends.title"}}</h1>
+  <p class="page-intro">{{t "trends.subtitle"}}</p>
+</div>
+
+<form class="search-form" method="GET" action="/trends" style="margin-bottom:var(--space-xl)">
+  <div class="search-form__row">
+    <div class="search-form__field">
+      <label for="borough-filter">{{t "search.boroughLabel"}}</label>
+      <select id="borough-filter" name="borough">
+        <option value="">{{t "search.allBoroughs"}}</option>
+        <option value="Manhattan" {{#if (eq selectedBorough "Manhattan")}}selected{{/if}}>Manhattan</option>
+        <option value="Brooklyn" {{#if (eq selectedBorough "Brooklyn")}}selected{{/if}}>Brooklyn</option>
+        <option value="Queens" {{#if (eq selectedBorough "Queens")}}selected{{/if}}>Queens</option>
+        <option value="Bronx" {{#if (eq selectedBorough "Bronx")}}selected{{/if}}>Bronx</option>
+        <option value="Staten Island" {{#if (eq selectedBorough "Staten Island")}}selected{{/if}}>Staten Island</option>
+      </select>
+    </div>
+    <div class="search-form__actions">
+      <button class="button button-primary" type="submit">{{t "search.submit"}}</button>
+    </div>
+  </div>
+</form>
+
+{{#if trends.length}}
+  <div class="trends-grid">
+    {{#each trends}}
+      <section class="content-panel trend-card">
+        <h2 class="section-title">{{this.borough}}</h2>
+        <p class="form-hint">{{this.buildingCount}} {{t "trends.buildings"}}</p>
+
+        <div class="stats-strip" style="margin:var(--space-md) 0">
+          <div class="stats-strip__item">
+            <span class="stats-strip__value">{{this.totalComplaints}}</span>
+            <span class="stats-strip__label">{{t "stats.complaints"}}</span>
+          </div>
+          <div class="stats-strip__item">
+            <span class="stats-strip__value">{{this.totalViolations}}</span>
+            <span class="stats-strip__label">{{t "stats.violations"}}</span>
+          </div>
+          <div class="stats-strip__item">
+            <span class="stats-strip__value">{{this.totalBedbugs}}</span>
+            <span class="stats-strip__label">{{t "stats.bedbugs"}}</span>
+          </div>
+          <div class="stats-strip__item">
+            <span class="stats-strip__value">{{this.totalLitigations}}</span>
+            <span class="stats-strip__label">{{t "stats.litigations"}}</span>
+          </div>
+        </div>
+
+        <h3 style="margin-top:var(--space-md);font-size:0.95rem;color:var(--color-text-muted)">{{t "trends.riskDistribution"}}</h3>
+        <div class="risk-bar" style="display:flex;height:1.5rem;border-radius:var(--token-radius-sm);overflow:hidden;margin:var(--space-sm) 0">
+          {{#if this.riskDistribution.Low}}
+            <div class="risk-bar__segment risk-bar__segment--low" style="flex:{{this.riskDistribution.Low}}" title="Low: {{this.riskDistribution.Low}}"></div>
+          {{/if}}
+          {{#if this.riskDistribution.Medium}}
+            <div class="risk-bar__segment risk-bar__segment--medium" style="flex:{{this.riskDistribution.Medium}}" title="Medium: {{this.riskDistribution.Medium}}"></div>
+          {{/if}}
+          {{#if this.riskDistribution.High}}
+            <div class="risk-bar__segment risk-bar__segment--high" style="flex:{{this.riskDistribution.High}}" title="High: {{this.riskDistribution.High}}"></div>
+          {{/if}}
+        </div>
+        <div style="display:flex;gap:var(--space-md);font-size:0.85rem">
+          <span>{{t "trends.low"}}: {{this.riskDistribution.Low}}</span>
+          <span>{{t "trends.medium"}}: {{this.riskDistribution.Medium}}</span>
+          <span>{{t "trends.high"}}: {{this.riskDistribution.High}}</span>
+        </div>
+
+        {{#if this.topIssueCategories.length}}
+          <h3 style="margin-top:var(--space-md);font-size:0.95rem;color:var(--color-text-muted)">{{t "trends.topIssues"}}</h3>
+          <ul style="margin:var(--space-sm) 0;padding-left:1.25rem">
+            {{#each this.topIssueCategories}}
+              <li>{{this.category}} <span class="form-hint">({{this.count}})</span></li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </section>
+    {{/each}}
+  </div>
+{{else}}
+  {{> empty-state title=(t "trends.emptyTitle") message=(t "trends.emptyMessage")}}
+{{/if}}

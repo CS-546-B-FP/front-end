@@ -1,4 +1,4 @@
-<article class="building-card">
+<article class="building-card" data-complaints="{{building.riskSummary.complaints}}" data-violations="{{building.riskSummary.violations}}" data-bedbugs="{{building.riskSummary.bedbugs}}" data-litigations="{{building.riskSummary.litigations}}">
   <a class="building-card__address" href="/buildings/{{building._id}}">{{#if building.address}}{{building.address}}{{else}}{{building.streetAddress}}{{/if}}</a>
   <div class="building-card__meta">
     <span>{{building.borough}}</span>

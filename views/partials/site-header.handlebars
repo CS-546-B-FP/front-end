@@ -11,6 +11,9 @@
         <li>
           <a href="/buildings" {{#if (isActivePath currentPath "/buildings" "prefix")}}aria-current="page"{{/if}}>{{t "nav.buildings"}}</a>
         </li>
+        <li>
+          <a href="/trends" {{#if (isActivePath currentPath "/trends" "prefix")}}aria-current="page"{{/if}}>{{t "nav.trends"}}</a>
+        </li>
         {{#if currentUser}}
           <li>
             <a href="/watchlist" {{#if (isActivePath currentPath "/watchlist" "prefix")}}aria-current="page"{{/if}}>{{t "nav.watchlist"}}</a>

@@ -5,6 +5,7 @@ export default {
   nav: {
     home: 'Home',
     buildings: 'Buildings',
+    trends: 'Trends',
     auth: 'Sign in',
     account: 'Account',
     admin: 'Admin',
@@ -55,6 +56,18 @@ export default {
     forbiddenTitle: 'Access denied',
     forbiddenMessage: 'You do not have permission to access this page.'
   },
+  trends: {
+    title: 'Neighborhood Trends',
+    subtitle: 'Borough-level overview of housing complaints, violations, and common issues.',
+    buildings: 'buildings',
+    riskDistribution: 'Risk Distribution',
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High',
+    topIssues: 'Top Issue Categories',
+    emptyTitle: 'No trend data available',
+    emptyMessage: 'Trend data will appear once buildings are loaded.'
+  },
   footer: {
     note: 'LeaseWise NYC — Data sourced from NYC Open Data.'
   },
@@ -99,7 +112,13 @@ export default {
     chooseShortlist: 'Choose shortlist',
     watching: 'Watching',
     watch: 'Watch',
-    noReviewsYet: 'No reviews yet'
+    noReviewsYet: 'No reviews yet',
+    saferAlternatives: 'Safer Alternatives Nearby',
+    saferAlternativesDesc: 'These buildings in the same borough have fewer complaints and violations.',
+    customWeighting: 'Customize Risk Scoring',
+    customWeightingDesc: 'Adjust how much each factor matters to you, then click Apply to re-sort buildings.',
+    applyWeights: 'Apply Weights',
+    resetWeights: 'Reset'
   },
   stats: {
     complaints: 'Complaints',
@@ -108,7 +127,12 @@ export default {
     litigations: 'Litigations'
   },
   reviews: {
-    delete: 'Delete'
+    delete: 'Delete',
+    edit: 'Edit',
+    saveEdit: 'Save',
+    deleteDialogTitle: 'Delete review?',
+    deleteDialogMessage: 'This will permanently delete your review. This cannot be undone.',
+    deleteConfirm: 'Delete review'
   },
   account: {
     title: 'My Account',
@@ -137,7 +161,9 @@ export default {
     emptyMessage: 'Browse buildings and click Watch to save them here.',
     browseBuildings: 'Browse buildings',
     toggleFailed: 'Failed to update watchlist.',
-    toggleNetworkError: 'Unable to update watchlist. Please try again.'
+    toggleNetworkError: 'Unable to update watchlist. Please try again.',
+    recentActivity: 'Recent Activity',
+    watchedBuildings: 'Watched Buildings'
   },
   compare: {
     title: 'Compare Buildings',
