@@ -2,6 +2,19 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.querySelector('form[role="search"]');
+    const sortOrderSelect = document.getElementById('sortOrder');
+    const sortBySelect = document.getElementById('sortBy');
+    const riskLevelSelect = document.getElementById('riskLevel');
+
+    function submitSearch() {
+      if (searchForm) searchForm.submit();
+    }
+
+    if (sortOrderSelect) sortOrderSelect.addEventListener('change', submitSearch);
+    if (sortBySelect) sortBySelect.addEventListener('change', submitSearch);
+    if (riskLevelSelect) riskLevelSelect.addEventListener('change', submitSearch);
+
     const applyBtn = document.getElementById('apply-weights');
     const resetBtn = document.getElementById('reset-weights');
     if (!applyBtn) return;
@@ -10,9 +23,6 @@
     const grid = document.querySelector('.building-grid');
     if (!grid) return;
 
-    const sortOrderSelect = document.getElementById('sortOrder');
-    const sortBySelect = document.getElementById('sortBy');
-    const riskLevelSelect = document.getElementById('riskLevel');
     const originalOrder = Array.from(grid.querySelectorAll('.building-card'));
     let weightsActive = false;
 
@@ -82,6 +92,10 @@
       if (status) {
         status.textContent = `${visible} buildings sorted by custom weights.`;
       }
+
+      if (sortOrderSelect) sortOrderSelect.onchange = () => applyWeights();
+      if (sortBySelect) sortBySelect.onchange = () => applyWeights();
+      if (riskLevelSelect) riskLevelSelect.onchange = () => applyWeights();
     }
 
     sliders.forEach(slider => {
@@ -93,24 +107,6 @@
     });
 
     applyBtn.addEventListener('click', applyWeights);
-
-    if (sortOrderSelect) {
-      sortOrderSelect.addEventListener('change', () => {
-        if (weightsActive) applyWeights();
-      });
-    }
-
-    if (sortBySelect) {
-      sortBySelect.addEventListener('change', () => {
-        if (weightsActive) applyWeights();
-      });
-    }
-
-    if (riskLevelSelect) {
-      riskLevelSelect.addEventListener('change', () => {
-        if (weightsActive) applyWeights();
-      });
-    }
 
     resetBtn.addEventListener('click', () => {
       weightsActive = false;
@@ -136,6 +132,10 @@
           badge.textContent = `${level.charAt(0).toUpperCase() + level.slice(1)}`;
         }
       });
+
+      if (sortOrderSelect) sortOrderSelect.onchange = submitSearch;
+      if (sortBySelect) sortBySelect.onchange = submitSearch;
+      if (riskLevelSelect) riskLevelSelect.onchange = submitSearch;
     });
   });
 })();
