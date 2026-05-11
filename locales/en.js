@@ -85,6 +85,7 @@ export default {
     featureWatchlistDesc: 'Track buildings you are considering and revisit them from your dashboard.'
   },
   buildings: {
+    browseTitle: 'Browse Buildings',
     noResultsTitle: 'No buildings found',
     noResultsMessage: 'Try adjusting your search or borough filter.',
     clearSearch: 'Clear search',

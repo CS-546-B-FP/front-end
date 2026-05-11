@@ -85,6 +85,7 @@ export default {
     featureWatchlistDesc: '追踪您正在考虑的建筑，随时从仪表盘重新查看。'
   },
   buildings: {
+    browseTitle: '浏览建筑',
     noResultsTitle: '未找到建筑',
     noResultsMessage: '请尝试调整搜索词或行政区筛选条件。',
     clearSearch: '清除搜索',
