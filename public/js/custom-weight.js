@@ -10,14 +10,11 @@
     const grid = document.querySelector('.building-grid');
     if (!grid) return;
 
+    const sortOrderSelect = document.getElementById('sortOrder');
+    const sortBySelect = document.getElementById('sortBy');
+    const riskLevelSelect = document.getElementById('riskLevel');
     const originalOrder = Array.from(grid.querySelectorAll('.building-card'));
-
-    sliders.forEach(slider => {
-      slider.addEventListener('input', () => {
-        const label = document.querySelector(`[data-weight-value="${slider.dataset.weight}"]`);
-        if (label) label.textContent = slider.value;
-      });
-    });
+    let weightsActive = false;
 
     function getWeights() {
       const weights = {};
@@ -25,11 +22,6 @@
         weights[slider.dataset.weight] = Number(slider.value);
       });
       return weights;
-    }
-
-    function getSortOrder() {
-      const select = document.getElementById('sortOrder');
-      return select ? select.value : 'desc';
     }
 
     function computeScore(card, weights) {
@@ -49,16 +41,18 @@
       return 'high';
     }
 
-    applyBtn.addEventListener('click', () => {
+    function applyWeights() {
+      weightsActive = true;
       const weights = getWeights();
-      const order = getSortOrder();
+      const order = sortOrderSelect ? sortOrderSelect.value : 'desc';
+      const riskFilter = riskLevelSelect ? riskLevelSelect.value : '';
       const cards = Array.from(grid.querySelectorAll('.building-card'));
 
-      const scored = cards.map((card, idx) => ({
-        card,
-        score: computeScore(card, weights),
-        originalIndex: idx
-      }));
+      const scored = cards.map((card, idx) => {
+        const score = computeScore(card, weights);
+        const level = getRiskLevel(score);
+        return { card, score, level, originalIndex: idx };
+      });
 
       scored.sort((a, b) => {
         if (a.score !== b.score) {
@@ -67,24 +61,59 @@
         return a.originalIndex - b.originalIndex;
       });
 
-      scored.forEach(({ card, score }) => {
+      scored.forEach(({ card, score, level }) => {
+        if (riskFilter) {
+          card.style.display = level === riskFilter.toLowerCase() ? '' : 'none';
+        } else {
+          card.style.display = '';
+        }
+
         grid.appendChild(card);
 
         const badge = card.querySelector('.risk-badge');
         if (badge) {
-          const level = getRiskLevel(score);
           badge.className = `risk-badge risk-badge--${level}`;
           badge.textContent = `${level.charAt(0).toUpperCase() + level.slice(1)} (${score})`;
         }
       });
 
+      const visible = scored.filter(s => s.card.style.display !== 'none').length;
       const status = document.getElementById('global-status');
       if (status) {
-        status.textContent = `Buildings reordered by custom weights. ${cards.length} buildings sorted.`;
+        status.textContent = `${visible} buildings sorted by custom weights.`;
       }
+    }
+
+    sliders.forEach(slider => {
+      slider.addEventListener('input', () => {
+        const label = document.querySelector(`[data-weight-value="${slider.dataset.weight}"]`);
+        if (label) label.textContent = slider.value;
+        applyWeights();
+      });
     });
 
+    applyBtn.addEventListener('click', applyWeights);
+
+    if (sortOrderSelect) {
+      sortOrderSelect.addEventListener('change', () => {
+        if (weightsActive) applyWeights();
+      });
+    }
+
+    if (sortBySelect) {
+      sortBySelect.addEventListener('change', () => {
+        if (weightsActive) applyWeights();
+      });
+    }
+
+    if (riskLevelSelect) {
+      riskLevelSelect.addEventListener('change', () => {
+        if (weightsActive) applyWeights();
+      });
+    }
+
     resetBtn.addEventListener('click', () => {
+      weightsActive = false;
       const defaults = { complaints: 1, violations: 2, bedbugs: 3, litigations: 4 };
       sliders.forEach(slider => {
         slider.value = defaults[slider.dataset.weight] || 1;
@@ -92,7 +121,10 @@
         if (label) label.textContent = slider.value;
       });
 
-      originalOrder.forEach(card => grid.appendChild(card));
+      originalOrder.forEach(card => {
+        card.style.display = '';
+        grid.appendChild(card);
+      });
 
       const badges = grid.querySelectorAll('.risk-badge');
       badges.forEach(badge => {
