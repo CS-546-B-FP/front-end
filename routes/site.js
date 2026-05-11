@@ -178,7 +178,7 @@ router.get("/trends", async (req, res) => {
 
     return res.render("trends", {
       pageTitle: "Neighborhood Trends — LeaseWise NYC",
-      trends: result.ok ? result.data : [],
+      trends: result.ok ? (result.data.trends || result.data) : [],
       selectedBorough: borough || '',
       scripts: SCRIPTS,
     });
