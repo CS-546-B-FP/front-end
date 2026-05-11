@@ -10,6 +10,8 @@
     const grid = document.querySelector('.building-grid');
     if (!grid) return;
 
+    const originalOrder = Array.from(grid.querySelectorAll('.building-card'));
+
     sliders.forEach(slider => {
       slider.addEventListener('input', () => {
         const label = document.querySelector(`[data-weight-value="${slider.dataset.weight}"]`);
@@ -25,12 +27,20 @@
       return weights;
     }
 
+    function getSortOrder() {
+      const select = document.getElementById('sortOrder');
+      return select ? select.value : 'desc';
+    }
+
     function computeScore(card, weights) {
       const c = Number(card.dataset.complaints || 0);
       const v = Number(card.dataset.violations || 0);
       const b = Number(card.dataset.bedbugs || 0);
       const l = Number(card.dataset.litigations || 0);
-      return c * weights.complaints + v * weights.violations + b * weights.bedbugs + l * weights.litigations;
+      return c * (weights.complaints || 0)
+           + v * (weights.violations || 0)
+           + b * (weights.bedbugs || 0)
+           + l * (weights.litigations || 0);
     }
 
     function getRiskLevel(score) {
@@ -41,14 +51,21 @@
 
     applyBtn.addEventListener('click', () => {
       const weights = getWeights();
+      const order = getSortOrder();
       const cards = Array.from(grid.querySelectorAll('.building-card'));
 
-      const scored = cards.map(card => ({
+      const scored = cards.map((card, idx) => ({
         card,
-        score: computeScore(card, weights)
+        score: computeScore(card, weights),
+        originalIndex: idx
       }));
 
-      scored.sort((a, b) => a.score - b.score);
+      scored.sort((a, b) => {
+        if (a.score !== b.score) {
+          return order === 'asc' ? a.score - b.score : b.score - a.score;
+        }
+        return a.originalIndex - b.originalIndex;
+      });
 
       scored.forEach(({ card, score }) => {
         grid.appendChild(card);
@@ -74,7 +91,19 @@
         const label = document.querySelector(`[data-weight-value="${slider.dataset.weight}"]`);
         if (label) label.textContent = slider.value;
       });
-      window.location.reload();
+
+      originalOrder.forEach(card => grid.appendChild(card));
+
+      const badges = grid.querySelectorAll('.risk-badge');
+      badges.forEach(badge => {
+        const card = badge.closest('.building-card');
+        if (card) {
+          const score = computeScore(card, defaults);
+          const level = getRiskLevel(score);
+          badge.className = `risk-badge risk-badge--${level}`;
+          badge.textContent = `${level.charAt(0).toUpperCase() + level.slice(1)}`;
+        }
+      });
     });
   });
 })();
