@@ -29,7 +29,13 @@ function buildLanguageLink(pathname, query, locale) {
 
 export function attachViewContext(req, res, next) {
   const requestedLocale = typeof req.query.lang === 'string' ? req.query.lang : '';
-  const locale = supportedLocales.includes(requestedLocale) ? requestedLocale : defaultLocale;
+  let locale;
+  if (supportedLocales.includes(requestedLocale)) {
+    locale = requestedLocale;
+    if (req.session) req.session.locale = locale;
+  } else {
+    locale = req.session?.locale || defaultLocale;
+  }
 
   res.locals.locale = locale;
   res.locals.messages = getMessages(locale);
