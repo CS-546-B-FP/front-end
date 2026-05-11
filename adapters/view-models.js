@@ -63,6 +63,11 @@ const normalizeRiskSummary = (building = {}) => {
     source.score = Number(riskScore);
   }
 
+  source.complaints = Number(building.complaintsCount || 0);
+  source.violations = Number(building.violationsCount || 0);
+  source.bedbugs = Number(building.bedbugCount || 0);
+  source.litigations = Number(building.litigationsCount || 0);
+
   return source;
 };
 

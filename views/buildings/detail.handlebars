@@ -48,9 +48,10 @@
         <h2 class="section-title" id="records-heading">{{t "buildings.housingRecords"}}</h2>
         <div class="records-list">
           {{#each building.housingRecords}}
-            <div class="record-item record-item--{{this.type}}">
-              <p class="record-item__type">{{this.type}}</p>
-              <p class="record-item__desc">{{this.description}}</p>
+            <div class="record-item record-item--{{this.recordType}}">
+              <p class="record-item__type">{{this.recordType}}</p>
+              <p class="record-item__desc">{{this.category}}{{#if this.description}} — {{this.description}}{{/if}}</p>
+              {{#if this.recordDate}}<p class="record-item__date">{{formatDate this.recordDate}}</p>{{/if}}
             </div>
           {{/each}}
         </div>
