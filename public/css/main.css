@@ -419,7 +419,9 @@ code {
 .review-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
+  list-style: none;
+  padding: 0;
 }
 
 .tag {
